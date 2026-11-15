@@ -275,3 +275,68 @@ export interface DetailedDietMealTime {
   items: DetailedDietFoodItem[];
 }
 
+export interface TbcaFoodItem {
+  id: string;
+  code: string;
+  group: string;
+  subgroup?: string;
+  name: string;
+  energyKcal: number;
+  moistureG: number;
+  proteinG: number;
+  fatG: number;
+  carbsG: number;
+  fiberG: number;
+  ashG: number;
+  calciumMg: number;
+  phosphorusMg: number;
+  ironMg: number;
+  vitAMcg: number;
+  thiaminB1Mg: number;
+  riboflavinB2Mg: number;
+  niacinB3Mg: number;
+  vitCMg: number;
+}
+
+export interface PatientAnthropometricControl {
+  date: string;
+  weightKg: number;
+  heightCm: number;
+  imc: number;
+  classification: string;
+  waistCm?: number;
+  hipCm?: number;
+  bodyFatPercent?: number;
+  notes?: string;
+}
+
+export interface PatientPhotoEvolution {
+  date: string;
+  plane: 'frontal_anterior' | 'frontal_posterior' | 'sagital_derecho' | 'sagital_izquierdo';
+  imageUrl: string;
+}
+
+export interface PatientRecord {
+  id: string;
+  fullName: string;
+  registerDate: string;
+  birthDate?: string;
+  age: number;
+  gender: 'F' | 'M';
+  isPregnant: boolean;
+  pregnancyWeek?: number;
+  isLactating: boolean;
+  maritalStatus?: string;
+  childrenCount?: number;
+  occupation?: string;
+  hobby?: string;
+  phone?: string;
+  address?: string;
+  consultReason: string;
+  objective: 'MANTENER' | 'BAJAR' | 'SUBIR';
+  adjustmentPercent: number;
+  observations?: string;
+  controls: PatientAnthropometricControl[];
+  photos: PatientPhotoEvolution[];
+}
+

@@ -1,101 +1,97 @@
 'use client';
 
-import React, { useState } from 'react';
-import { initialFoodItems } from '@/lib/data/nutritionData';
-import { FoodItem } from '@/lib/types';
+import React, { useState, useMemo } from 'react';
+import tbcaDataRaw from '@/lib/data/fullTbcaFoods.json';
+import { TbcaFoodItem } from '@/lib/types';
 import { 
   Apple, 
   Search, 
-  Plus, 
   Download, 
   Filter, 
   Sparkles, 
   X, 
   Check, 
   Flame,
-  Scale
+  Scale,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+  ArrowUpDown
 } from 'lucide-react';
 
 export const TablaAlimentosView: React.FC = () => {
-  const [foods, setFoods] = useState<FoodItem[]>(initialFoodItems);
+  const allFoods = tbcaDataRaw as TbcaFoodItem[];
+  
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('todos');
-  const [onlyBolivianNative, setOnlyBolivianNative] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<string>('todos');
+  const [sortBy, setSortBy] = useState<'name' | 'energyKcal' | 'proteinG' | 'ironMg' | 'calciumMg'>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 30;
 
-  // Formulario nuevo alimento
-  const [newName, setNewName] = useState('');
-  const [newCategory, setNewCategory] = useState<FoodItem['category']>('Cereales Andinos y Granos');
-  const [newKcal, setNewKcal] = useState<number>(100);
-  const [newProtein, setNewProtein] = useState<number>(5);
-  const [newCarbs, setNewCarbs] = useState<number>(20);
-  const [newFat, setNewFat] = useState<number>(1);
-  const [newFiber, setNewFiber] = useState<number>(2);
-  const [newIron, setNewIron] = useState<number>(1);
-  const [newCalcium, setNewCalcium] = useState<number>(20);
-  const [newSodium, setNewSodium] = useState<number>(10);
-  const [newIsNative, setNewIsNative] = useState(false);
-  const [newNotes, setNewNotes] = useState('');
+  // Modal para ver los 15 nutrientes de un alimento específico
+  const [selectedFood, setSelectedFood] = useState<TbcaFoodItem | null>(null);
 
-  const categories = [
-    'todos',
-    'Cereales Andinos y Granos',
-    'Tubérculos y Raíces',
-    'Leguminosas y Semillas',
-    'Carnes, Aves y Pescados',
-    'Lácteos y Derivados',
-    'Verduras y Hortalizas',
-    'Frutas Locales',
-    'Grasas y Aceites'
-  ];
+  // Lista única de grupos
+  const groups = useMemo(() => {
+    const set = new Set<string>();
+    allFoods.forEach(f => { if (f.group) set.add(f.group); });
+    return ['todos', ...Array.from(set).sort()];
+  }, [allFoods]);
 
-  const filteredFoods = foods.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'todos' || item.category === selectedCategory;
-    const matchesNative = !onlyBolivianNative || item.isBolivianNative;
-    return matchesSearch && matchesCategory && matchesNative;
-  });
+  // Filtrado y ordenamiento
+  const filteredAndSortedFoods = useMemo(() => {
+    let result = allFoods.filter(item => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch = !q || 
+        item.name.toLowerCase().includes(q) || 
+        item.code.toLowerCase().includes(q) ||
+        (item.subgroup && item.subgroup.toLowerCase().includes(q));
+      
+      const matchesGroup = selectedGroup === 'todos' || item.group === selectedGroup;
+      return matchesSearch && matchesGroup;
+    });
 
-  const handleAddFood = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newName.trim()) return;
+    result.sort((a, b) => {
+      let valA: any = a[sortBy];
+      let valB: any = b[sortBy];
+      if (typeof valA === 'string') {
+        return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      }
+      return sortOrder === 'asc' ? valA - valB : valB - valA;
+    });
 
-    const newFood: FoodItem = {
-      id: `food_${Date.now()}`,
-      name: newName.trim(),
-      category: newCategory,
-      portionGrams: 100,
-      energyKcal: Number(newKcal) || 0,
-      proteinGrams: Number(newProtein) || 0,
-      carbsGrams: Number(newCarbs) || 0,
-      fatGrams: Number(newFat) || 0,
-      fiberGrams: Number(newFiber) || 0,
-      ironMg: Number(newIron) || 0,
-      calciumMg: Number(newCalcium) || 0,
-      sodiumMg: Number(newSodium) || 0,
-      isBolivianNative: newIsNative,
-      notes: newNotes.trim()
-    };
+    return result;
+  }, [allFoods, searchQuery, selectedGroup, sortBy, sortOrder]);
 
-    setFoods([newFood, ...foods]);
-    setIsAddModalOpen(false);
-    // Limpiar formulario
-    setNewName('');
-    setNewNotes('');
+  // Paginación
+  const totalPages = Math.ceil(filteredAndSortedFoods.length / itemsPerPage);
+  const paginatedFoods = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredAndSortedFoods.slice(start, start + itemsPerPage);
+  }, [filteredAndSortedFoods, currentPage, itemsPerPage]);
+
+  const handleSort = (field: 'name' | 'energyKcal' | 'proteinG' | 'ironMg' | 'calciumMg') => {
+    if (sortBy === field) {
+      setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder(field === 'name' ? 'asc' : 'desc');
+    }
+    setCurrentPage(1);
   };
 
   const handleExportCSV = () => {
-    const headers = 'Nombre,Categoría,Porción (g),Calorías (kcal),Proteínas (g),Carbohidratos (g),Grasas (g),Fibra (g),Hierro (mg),Calcio (mg),Sodio (mg)\n';
-    const rows = filteredFoods.map(f => 
-      `"${f.name}","${f.category}",${f.portionGrams},${f.energyKcal},${f.proteinGrams},${f.carbsGrams},${f.fatGrams},${f.fiberGrams},${f.ironMg},${f.calciumMg},${f.sodiumMg}`
+    const headers = 'Código,Grupo,Subgrupo,Nombre,Energía(kcal),Humedad(g),Proteína(g),Grasa(g),Carbohidratos(g),Fibra(g),Ceniza(g),Calcio(mg),Fósforo(mg),Hierro(mg),VitA(ug),VitB1(mg),VitB2(mg),VitB3(mg),VitC(mg)\n';
+    const rows = filteredAndSortedFoods.map(f => 
+      `"${f.code}","${f.group}","${f.subgroup || ''}","${f.name}",${f.energyKcal},${f.moistureG},${f.proteinG},${f.fatG},${f.carbsG},${f.fiberG},${f.ashG},${f.calciumMg},${f.phosphorusMg},${f.ironMg},${f.vitAMcg},${f.thiaminB1Mg},${f.riboflavinB2Mg},${f.niacinB3Mg},${f.vitCMg}`
     ).join('\n');
 
     const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `TBCA_Bolivia_Nutrivel_${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `TBCA_Bolivia_Completa_${filteredAndSortedFoods.length}_alimentos.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -103,15 +99,18 @@ export const TablaAlimentosView: React.FC = () => {
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-200">
       
-      {/* Encabezado con Botones de Acción */}
+      {/* 1. ENCABEZADO */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100 dark:border-gray-800">
         <div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 text-xs font-bold mb-2">
+            <Apple className="w-3.5 h-3.5" />
+            <span>Base Oficial Completa • {allFoods.length} Alimentos Reales</span>
+          </div>
           <h2 className="text-2xl font-extrabold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-            <Apple className="w-6 h-6 text-emerald-500" />
             Tabla Boliviana de Composición de Alimentos (TBCA)
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Valores nutricionales por 100g de porción comestible (Fuente: Ministerio de Salud / INLASA Bolivia).
+            Valores nutricionales por 100g de porción comestible con 15 analitos (Proteínas, Grasas, Carbohidratos, Calcio, Hierro, Vitaminas).
           </p>
         </div>
 
@@ -120,21 +119,14 @@ export const TablaAlimentosView: React.FC = () => {
             onClick={handleExportCSV}
             className="px-3.5 py-2 rounded-2xl bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center gap-2 cursor-pointer shadow-2xs"
           >
-            <Download className="w-4 h-4 text-gray-400" />
-            <span>Exportar CSV</span>
-          </button>
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold shadow-md shadow-pink-500/20 hover:opacity-95 transition-all flex items-center gap-2 cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>+ Agregar Alimento</span>
+            <Download className="w-4 h-4 text-emerald-500" />
+            <span>Descargar CSV ({filteredAndSortedFoods.length})</span>
           </button>
         </div>
       </div>
 
-      {/* Barra de Filtros y Búsqueda */}
-      <div className="bg-white dark:bg-[#18221f] rounded-3xl p-4 border border-gray-100 dark:border-[#293a34] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* 2. FILTROS Y BÚSQUEDA */}
+      <div className="bg-white dark:bg-[#141526] rounded-3xl p-4 border border-gray-100 dark:border-[#262840] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         
         {/* Buscador */}
         <div className="relative flex-1">
@@ -142,108 +134,139 @@ export const TablaAlimentosView: React.FC = () => {
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar por alimento (ej: 'quinua', 'tarwi', 'trucha')..."
-            className="w-full text-xs sm:text-sm bg-gray-50 dark:bg-[#121816] border border-gray-200 dark:border-gray-700 rounded-2xl pl-10 pr-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-hidden focus:ring-2 focus:ring-pink-400"
+            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            placeholder="Buscar entre los 918 alimentos (ej: 'quinua', 'tarhui', 'charque', 'ispi', 'oca', 'chuño')..."
+            className="w-full text-xs sm:text-sm bg-gray-50 dark:bg-[#1a1c32] border border-gray-200 dark:border-[#2b2e4c] rounded-2xl pl-10 pr-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500"
           />
         </div>
 
-        {/* Filtro Categorías y Toggle Nativo */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Filtro por Grupo */}
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4 text-gray-400 shrink-0" />
           <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs bg-gray-50 dark:bg-[#121816] border border-gray-200 dark:border-gray-700 rounded-2xl px-3 py-2 text-gray-700 dark:text-gray-300 font-medium"
+            value={selectedGroup}
+            onChange={(e) => { setSelectedGroup(e.target.value); setCurrentPage(1); }}
+            className="text-xs bg-gray-50 dark:bg-[#1a1c32] border border-gray-200 dark:border-[#2b2e4c] rounded-2xl px-3 py-2 text-gray-700 dark:text-gray-300 font-semibold focus:outline-none"
           >
-            {categories.map(c => (
-              <option key={c} value={c}>{c === 'todos' ? 'Todas las categorías' : c}</option>
+            {groups.map(g => (
+              <option key={g} value={g}>
+                {g === 'todos' ? `Todos los grupos (${allFoods.length})` : g}
+              </option>
             ))}
           </select>
-
-          <button
-            onClick={() => setOnlyBolivianNative(!onlyBolivianNative)}
-            className={`text-xs px-3.5 py-2 rounded-2xl font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
-              onlyBolivianNative
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-700'
-                : 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-[#121816] dark:text-gray-400 dark:border-gray-700'
-            }`}
-          >
-            <span>🇧🇴 Alimentos Andinos / Nativos</span>
-            {onlyBolivianNative && <Check className="w-3.5 h-3.5" />}
-          </button>
         </div>
 
       </div>
 
-      {/* Tabla de Alimentos */}
-      <div className="bg-white dark:bg-[#18221f] rounded-3xl border border-gray-100 dark:border-[#293a34] shadow-xs overflow-hidden">
+      {/* 3. TABLA CON PAGINACIÓN Y DETALLE */}
+      <div className="bg-white dark:bg-[#141526] rounded-3xl border border-gray-100 dark:border-[#262840] shadow-xs overflow-hidden">
+        
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-gray-50 dark:bg-[#141526] border-b border-gray-100 dark:border-gray-800 text-gray-400 font-bold uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-4">Alimento (100g)</th>
-                <th className="py-3.5 px-3">Categoría</th>
-                <th className="py-3.5 px-3 text-right">Kcal</th>
-                <th className="py-3.5 px-3 text-right">Proteína (g)</th>
-                <th className="py-3.5 px-3 text-right">Carbos (g)</th>
-                <th className="py-3.5 px-3 text-right">Grasas (g)</th>
-                <th className="py-3.5 px-3 text-right">Fibra (g)</th>
-                <th className="py-3.5 px-3 text-right">Hierro (mg)</th>
-                <th className="py-3.5 px-3 text-right">Calcio (mg)</th>
-                <th className="py-3.5 px-3 text-right">Sodio (mg)</th>
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="bg-gray-50/80 dark:bg-[#181a30] border-b border-gray-100 dark:border-[#262840] text-gray-500 uppercase tracking-wider font-extrabold text-[10px]">
+                <th className="py-3 px-3">Cód.</th>
+                <th 
+                  className="py-3 px-4 cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                  onClick={() => handleSort('name')}
+                >
+                  <div className="flex items-center gap-1">
+                    <span>Alimento</span>
+                    <ArrowUpDown className="w-3 h-3" />
+                  </div>
+                </th>
+                <th className="py-3 px-3">Grupo</th>
+                <th 
+                  className="py-3 px-3 text-right cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                  onClick={() => handleSort('energyKcal')}
+                >
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Energía (kcal)</span>
+                    <ArrowUpDown className="w-3 h-3" />
+                  </div>
+                </th>
+                <th 
+                  className="py-3 px-3 text-right cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                  onClick={() => handleSort('proteinG')}
+                >
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Prot (g)</span>
+                    <ArrowUpDown className="w-3 h-3" />
+                  </div>
+                </th>
+                <th className="py-3 px-3 text-right">Grasa (g)</th>
+                <th className="py-3 px-3 text-right">Carbs (g)</th>
+                <th 
+                  className="py-3 px-3 text-right cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                  onClick={() => handleSort('ironMg')}
+                >
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Hierro (mg)</span>
+                    <ArrowUpDown className="w-3 h-3" />
+                  </div>
+                </th>
+                <th 
+                  className="py-3 px-3 text-right cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                  onClick={() => handleSort('calciumMg')}
+                >
+                  <div className="flex items-center justify-end gap-1">
+                    <span>Calcio (mg)</span>
+                    <ArrowUpDown className="w-3 h-3" />
+                  </div>
+                </th>
+                <th className="py-3 px-3 text-center">Detalle</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800/60">
-              {filteredFoods.length === 0 ? (
+            <tbody className="divide-y divide-gray-100 dark:divide-[#202238]">
+              {paginatedFoods.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="py-10 text-center text-gray-400">
-                    No se encontraron alimentos con los filtros aplicados.
+                  <td colSpan={10} className="py-8 text-center text-gray-400 text-xs">
+                    No se encontraron alimentos que coincidan con &ldquo;{searchQuery}&rdquo;.
                   </td>
                 </tr>
               ) : (
-                filteredFoods.map(food => (
-                  <tr key={food.id} className="hover:bg-pink-50/30 dark:hover:bg-[#1a1c30]/50 transition-colors">
-                    <td className="py-3 px-4 font-bold text-gray-900 dark:text-gray-100">
-                      <div className="flex items-center gap-2">
-                        <span>{food.name}</span>
-                        {food.isBolivianNative && (
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                            🇧🇴 Nativo
-                          </span>
-                        )}
-                      </div>
-                      {food.notes && (
-                        <div className="text-[10px] font-normal text-gray-400 mt-0.5 line-clamp-1">{food.notes}</div>
-                      )}
+                paginatedFoods.map((item) => (
+                  <tr 
+                    key={item.id}
+                    className="hover:bg-gray-50/60 dark:hover:bg-[#1a1c35]/60 transition-colors"
+                  >
+                    <td className="py-2.5 px-3 font-mono text-[10px] text-gray-400">
+                      #{item.code}
                     </td>
-                    <td className="py-3 px-3 text-gray-500 dark:text-gray-400">
-                      <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-[11px]">
-                        {food.category}
+                    <td className="py-2.5 px-4 font-bold text-gray-900 dark:text-gray-100 max-w-[240px] truncate">
+                      {item.name}
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <span className="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 truncate max-w-[150px]">
+                        {item.group}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-right font-extrabold text-pink-600 dark:text-pink-400">
-                      {food.energyKcal}
+                    <td className="py-2.5 px-3 text-right font-extrabold text-orange-600 dark:text-orange-400">
+                      {item.energyKcal}
                     </td>
-                    <td className="py-3 px-3 text-right font-bold text-orange-600 dark:text-orange-400">
-                      {food.proteinGrams}
+                    <td className="py-2.5 px-3 text-right font-extrabold text-rose-600 dark:text-rose-400">
+                      {item.proteinG}
                     </td>
-                    <td className="py-3 px-3 text-right font-semibold text-gray-700 dark:text-gray-300">
-                      {food.carbsGrams}
+                    <td className="py-2.5 px-3 text-right text-blue-600 dark:text-blue-400">
+                      {item.fatG}
                     </td>
-                    <td className="py-3 px-3 text-right font-semibold text-gray-700 dark:text-gray-300">
-                      {food.fatGrams}
+                    <td className="py-2.5 px-3 text-right text-amber-600 dark:text-amber-400">
+                      {item.carbsG}
                     </td>
-                    <td className="py-3 px-3 text-right text-emerald-600 dark:text-emerald-400 font-semibold">
-                      {food.fiberGrams}
+                    <td className="py-2.5 px-3 text-right font-extrabold text-purple-600 dark:text-purple-400">
+                      {item.ironMg}
                     </td>
-                    <td className="py-3 px-3 text-right text-gray-600 dark:text-gray-400">
-                      {food.ironMg}
+                    <td className="py-2.5 px-3 text-right text-teal-600 dark:text-teal-400">
+                      {item.calciumMg}
                     </td>
-                    <td className="py-3 px-3 text-right text-gray-600 dark:text-gray-400">
-                      {food.calciumMg}
-                    </td>
-                    <td className="py-3 px-3 text-right text-gray-600 dark:text-gray-400">
-                      {food.sodiumMg}
+                    <td className="py-2.5 px-3 text-center">
+                      <button
+                        onClick={() => setSelectedFood(item)}
+                        className="p-1.5 rounded-lg bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 hover:bg-pink-100 transition-all cursor-pointer"
+                        title="Ver 15 nutrientes completos"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -251,188 +274,140 @@ export const TablaAlimentosView: React.FC = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Barra de Paginación */}
+        <div className="p-4 border-t border-gray-100 dark:border-[#262840] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+          <div>
+            Mostrando <strong>{paginatedFoods.length}</strong> de <strong>{filteredAndSortedFoods.length}</strong> alimentos (Página {currentPage} de {totalPages || 1})
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+              <span>Anterior</span>
+            </button>
+
+            <span className="font-bold px-2 text-gray-900 dark:text-gray-100">
+              {currentPage} / {totalPages || 1}
+            </span>
+
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage >= totalPages}
+              className="px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1"
+            >
+              <span>Siguiente</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+
       </div>
 
-      {/* MODAL PARA AGREGAR NUEVO ALIMENTO */}
-      {isAddModalOpen && (
+      {/* 4. MODAL DETALLE DE LOS 15 NUTRIENTES */}
+      {selectedFood && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-[#18221f] rounded-3xl p-6 max-w-xl w-full border border-gray-100 dark:border-gray-800 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800 mb-4">
-              <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                <Plus className="w-5 h-5 text-pink-500" />
-                Registrar Nuevo Alimento en la TBCA
-              </h3>
+          <div className="bg-white dark:bg-[#141526] rounded-3xl border border-gray-100 dark:border-[#262840] p-6 max-w-lg w-full shadow-2xl space-y-4">
+            
+            <div className="flex items-start justify-between pb-3 border-b border-gray-100 dark:border-gray-800">
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-pink-500 block">
+                  Código #{selectedFood.code} • {selectedFood.group}
+                </span>
+                <h3 className="text-lg font-extrabold text-gray-900 dark:text-gray-100 mt-0.5">
+                  {selectedFood.name}
+                </h3>
+                <span className="text-xs text-gray-400">Porción: 100g de porción comestible</span>
+              </div>
               <button
-                onClick={() => setIsAddModalOpen(false)}
-                className="p-1 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={() => setSelectedFood(null)}
+                className="p-1.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:hover:text-white"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleAddFood} className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">
-                  Nombre del Alimento *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="ej: Amaranto inflado / Pito de cañahua"
-                  className="w-full text-xs sm:text-sm bg-gray-50 dark:bg-[#121816] border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-gray-800 dark:text-gray-200"
-                />
+            {/* Macro y Micronutrientes (15 analitos) */}
+            <div className="grid grid-cols-3 gap-2.5 text-center text-xs">
+              <div className="p-2.5 rounded-xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200/50">
+                <span className="text-[10px] text-orange-600 block">Energía</span>
+                <span className="text-base font-black text-orange-700 dark:text-orange-300">{selectedFood.energyKcal} kcal</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/50">
+                <span className="text-[10px] text-rose-600 block">Proteína</span>
+                <span className="text-base font-black text-rose-700 dark:text-rose-300">{selectedFood.proteinG} g</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200/50">
+                <span className="text-[10px] text-blue-600 block">Grasa</span>
+                <span className="text-base font-black text-blue-700 dark:text-blue-300">{selectedFood.fatG} g</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">
-                    Categoría
-                  </label>
-                  <select
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value as any)}
-                    className="w-full text-xs bg-gray-50 dark:bg-[#121816] border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-gray-800 dark:text-gray-200"
-                  >
-                    {categories.filter(c => c !== 'todos').map(c => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center pt-5">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-emerald-700 dark:text-emerald-400">
-                    <input
-                      type="checkbox"
-                      checked={newIsNative}
-                      onChange={(e) => setNewIsNative(e.target.checked)}
-                      className="rounded-sm text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <span>Alimento Nativo Boliviano 🇧🇴</span>
-                  </label>
-                </div>
+              <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/50">
+                <span className="text-[10px] text-amber-600 block">Carbohidratos</span>
+                <span className="text-base font-black text-amber-700 dark:text-amber-300">{selectedFood.carbsG} g</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/50">
+                <span className="text-[10px] text-emerald-600 block">Fibra cruda</span>
+                <span className="text-base font-black text-emerald-700 dark:text-emerald-300">{selectedFood.fiberG} g</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200/50">
+                <span className="text-[10px] text-cyan-600 block">Humedad</span>
+                <span className="text-base font-black text-cyan-700 dark:text-cyan-300">{selectedFood.moistureG} g</span>
               </div>
 
-              {/* Nutrientes por 100g */}
-              <div className="p-4 rounded-2xl bg-gray-50 dark:bg-[#121816] border border-gray-200/60 dark:border-gray-800 space-y-3">
-                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">
-                  Composición Nutricional por 100g
-                </span>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div>
-                    <label className="text-[11px] text-gray-500 block mb-0.5">Calorías (kcal)</label>
-                    <input
-                      type="number"
-                      value={newKcal}
-                      onChange={(e) => setNewKcal(parseFloat(e.target.value) || 0)}
-                      className="w-full text-xs bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 rounded-lg p-2 font-bold text-pink-600"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] text-gray-500 block mb-0.5">Proteína (g)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={newProtein}
-                      onChange={(e) => setNewProtein(parseFloat(e.target.value) || 0)}
-                      className="w-full text-xs bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 rounded-lg p-2 font-bold text-orange-600"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] text-gray-500 block mb-0.5">Carbohidratos (g)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={newCarbs}
-                      onChange={(e) => setNewCarbs(parseFloat(e.target.value) || 0)}
-                      className="w-full text-xs bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 rounded-lg p-2"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] text-gray-500 block mb-0.5">Grasas (g)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={newFat}
-                      onChange={(e) => setNewFat(parseFloat(e.target.value) || 0)}
-                      className="w-full text-xs bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 rounded-lg p-2"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                  <div>
-                    <label className="text-[11px] text-gray-500 block mb-0.5">Fibra (g)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={newFiber}
-                      onChange={(e) => setNewFiber(parseFloat(e.target.value) || 0)}
-                      className="w-full text-xs bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 rounded-lg p-2"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] text-gray-500 block mb-0.5">Hierro (mg)</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={newIron}
-                      onChange={(e) => setNewIron(parseFloat(e.target.value) || 0)}
-                      className="w-full text-xs bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 rounded-lg p-2"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] text-gray-500 block mb-0.5">Calcio (mg)</label>
-                    <input
-                      type="number"
-                      value={newCalcium}
-                      onChange={(e) => setNewCalcium(parseFloat(e.target.value) || 0)}
-                      className="w-full text-xs bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 rounded-lg p-2"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] text-gray-500 block mb-0.5">Sodio (mg)</label>
-                    <input
-                      type="number"
-                      value={newSodium}
-                      onChange={(e) => setNewSodium(parseFloat(e.target.value) || 0)}
-                      className="w-full text-xs bg-white dark:bg-[#18221f] border border-gray-200 dark:border-gray-700 rounded-lg p-2"
-                    />
-                  </div>
-                </div>
+              <div className="p-2.5 rounded-xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200/50">
+                <span className="text-[10px] text-purple-600 block">Hierro (Fe)</span>
+                <span className="text-base font-black text-purple-700 dark:text-purple-300">{selectedFood.ironMg} mg</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-teal-50 dark:bg-teal-950/30 border border-teal-200/50">
+                <span className="text-[10px] text-teal-600 block">Calcio (Ca)</span>
+                <span className="text-base font-black text-teal-700 dark:text-teal-300">{selectedFood.calciumMg} mg</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200/50">
+                <span className="text-[10px] text-indigo-600 block">Fósforo (P)</span>
+                <span className="text-base font-black text-indigo-700 dark:text-indigo-300">{selectedFood.phosphorusMg} mg</span>
               </div>
 
-              <div>
-                <label className="text-xs font-semibold text-gray-600 dark:text-gray-300 block mb-1">
-                  Notas Clínicas / Descripción
-                </label>
-                <textarea
-                  rows={2}
-                  value={newNotes}
-                  onChange={(e) => setNewNotes(e.target.value)}
-                  placeholder="Detalles sobre cocción, propiedades o uso clínico..."
-                  className="w-full text-xs bg-gray-50 dark:bg-[#121816] border border-gray-200 dark:border-gray-700 rounded-xl p-2.5 text-gray-800 dark:text-gray-200"
-                />
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <span className="text-[10px] text-gray-500 block">Vitamina A</span>
+                <span className="font-extrabold text-gray-800 dark:text-gray-200">{selectedFood.vitAMcg} ug</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <span className="text-[10px] text-gray-500 block">Tiamina (B1)</span>
+                <span className="font-extrabold text-gray-800 dark:text-gray-200">{selectedFood.thiaminB1Mg} mg</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <span className="text-[10px] text-gray-500 block">Riboflavina (B2)</span>
+                <span className="font-extrabold text-gray-800 dark:text-gray-200">{selectedFood.riboflavinB2Mg} mg</span>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-600 dark:text-gray-400"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-xl bg-pink-500 text-white text-xs font-bold shadow-md hover:bg-pink-600"
-                >
-                  Guardar Alimento
-                </button>
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <span className="text-[10px] text-gray-500 block">Niacina (B3)</span>
+                <span className="font-extrabold text-gray-800 dark:text-gray-200">{selectedFood.niacinB3Mg} mg</span>
               </div>
-            </form>
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <span className="text-[10px] text-gray-500 block">Vitamina C</span>
+                <span className="font-extrabold text-gray-800 dark:text-gray-200">{selectedFood.vitCMg} mg</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <span className="text-[10px] text-gray-500 block">Cenizas</span>
+                <span className="font-extrabold text-gray-800 dark:text-gray-200">{selectedFood.ashG} g</span>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                onClick={() => setSelectedFood(null)}
+                className="w-full py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 font-bold text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+              >
+                Cerrar Detalle
+              </button>
+            </div>
+
           </div>
         </div>
       )}

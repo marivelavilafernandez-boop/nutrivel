@@ -35,6 +35,9 @@ import { FrecuenciaConsumoView } from '../nutricion/FrecuenciaConsumoView';
 import { RequerimientoMultiFormulaView } from '../nutricion/RequerimientoMultiFormulaView';
 import { RequerimientoHidricoView } from '../nutricion/RequerimientoHidricoView';
 import { FichaClinicaIntegralView } from '../nutricion/FichaClinicaIntegralView';
+import { Recordatorio24hExcelView } from '../nutricion/Recordatorio24hExcelView';
+import { PlanillaDietasExcelView } from '../nutricion/PlanillaDietasExcelView';
+import { RegistroPacientesView } from '../nutricion/RegistroPacientesView';
 
 export const AppShell: React.FC = () => {
   const { activeTab } = useNutriStore();
@@ -63,6 +66,12 @@ export const AppShell: React.FC = () => {
         return <FichaBioquimicaView />;
       case 'frecuencia':
         return <FrecuenciaConsumoView />;
+      case 'registropx':
+        return <RegistroPacientesView />;
+      case 'recordatorio24h':
+        return <Recordatorio24hExcelView />;
+      case 'dietas':
+        return <PlanillaDietasExcelView />;
       case 'tbca':
         return <TablaAlimentosView />;
       case 'minutas':

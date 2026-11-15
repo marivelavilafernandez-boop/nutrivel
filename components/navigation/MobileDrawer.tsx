@@ -26,7 +26,10 @@ import {
   ClipboardCheck,
   Flame,
   Droplets,
-  FileCheck2
+  FileCheck2,
+  Users,
+  Clock,
+  UtensilsCrossed
 } from 'lucide-react';
 
 export const MobileDrawer: React.FC = () => {
@@ -58,6 +61,9 @@ export const MobileDrawer: React.FC = () => {
   ];
 
   const nutritionTools = [
+    { id: 'registropx', label: 'Registro & Seguimiento Px', icon: Users },
+    { id: 'recordatorio24h', label: 'Recordatorio 24 Horas (R24h)', icon: Clock },
+    { id: 'dietas', label: 'Planilla de Dietas (Excel)', icon: UtensilsCrossed },
     { id: 'calculadoras', label: 'Calculadoras Clínicas', icon: Calculator },
     { id: 'requerimiento', label: 'Requerimiento Multi-Fórmula', icon: Flame },
     { id: 'hidrico', label: 'Requerimiento Hídrico', icon: Droplets },
