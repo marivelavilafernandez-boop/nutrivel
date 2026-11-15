@@ -57,6 +57,15 @@ export type TaskPriority = 'baja' | 'media' | 'alta' | 'urgente';
 
 export type TaskStatus = 'pendiente' | 'en_progreso' | 'entregado' | 'calificado';
 
+export interface TaskAttachment {
+  id: string;
+  name: string;
+  size: string;
+  type: string;
+  dataUrl?: string;
+  uploadedAt: string;
+}
+
 export interface TaskChecklistItem {
   id: string;
   text: string;
@@ -75,7 +84,7 @@ export interface Task {
   grade?: number;
   maxGrade?: number;
   checklist: TaskChecklistItem[];
-  attachments?: { name: string; size: string; type: string }[];
+  attachments?: TaskAttachment[];
   createdAt: string;
 }
 

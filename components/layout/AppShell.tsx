@@ -7,6 +7,7 @@ import { Header } from '../navigation/Header';
 import { MobileNav } from '../navigation/MobileNav';
 import { MobileDrawer } from '../navigation/MobileDrawer';
 import { GlobalSearchModal } from '../modals/GlobalSearchModal';
+import { NutriAiAssistant } from '../ai/NutriAiAssistant';
 
 import { DashboardView } from '../dashboard/DashboardView';
 import { MateriasView } from '../materias/MateriasView';
@@ -94,6 +95,9 @@ export const AppShell: React.FC = () => {
 
       {/* Buscador Global Omnibox */}
       <GlobalSearchModal />
+
+      {/* Asistente IA NutriIA (Gemini) */}
+      <NutriAiAssistant />
     </div>
   );
 };
