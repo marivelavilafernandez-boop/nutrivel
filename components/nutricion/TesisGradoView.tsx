@@ -51,7 +51,7 @@ export const TesisGradoView: React.FC = () => {
         <div className="relative z-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-bold mb-3 backdrop-blur-xs">
             <Award className="w-3.5 h-3.5" />
-            <span>Modalidad: Proyecto de Grado • Carrera de Nutrición y Dietética UMSA</span>
+            <span>Modalidad: Proyecto de Grado • Carrera de Nutrición y Salud Dietética UNIVIOR</span>
           </div>
 
           <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight">

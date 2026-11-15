@@ -88,7 +88,7 @@ export const DashboardView: React.FC = () => {
                 ▲ Al día
               </span>
             </div>
-            <p className="text-[11px] text-pink-100/90 mt-1">6to Semestre • UMSA</p>
+            <p className="text-[11px] text-pink-100/90 mt-1">6to Semestre • UNIVIOR</p>
           </div>
 
           {/* KPI 2: Horas de Práctica Clínica */}

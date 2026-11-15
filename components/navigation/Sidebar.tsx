@@ -56,7 +56,7 @@ export const Sidebar: React.FC = () => {
               Nutrivel
             </h1>
             <span className="text-[11px] font-medium text-pink-300/80 block">
-              Nutrición & Dietética • UMSA
+              Nutrición & Dietética • UNIVIOR
             </span>
           </div>
         </div>
@@ -185,7 +185,7 @@ export const Sidebar: React.FC = () => {
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-bold text-white truncate">Marivel Avila F.</p>
-            <p className="text-[10px] text-pink-300/80 truncate">Estudiante de Nutrición • UMSA</p>
+            <p className="text-[10px] text-pink-300/80 truncate">Estudiante de Nutrición • UNIVIOR</p>
           </div>
         </div>
       </div>

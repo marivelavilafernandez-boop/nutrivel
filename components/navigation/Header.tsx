@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
     tbca: 'Tabla Boliviana de Composición de Alimentos (TBCA)',
     minutas: 'Armador de Minutas y Planes de Alimentación',
     casos: 'Casos Clínicos & Diagnóstico PES',
-    tesis: 'Proyecto de Grado & Titulación UMSA',
+    tesis: 'Proyecto de Grado & Titulación UNIVIOR',
     apa: 'Generador de Citas Bibliográficas (APA 7)',
     profesional: 'Vista Previa • Consultorio Profesional',
     configuracion: 'Configuración y Respaldo'
