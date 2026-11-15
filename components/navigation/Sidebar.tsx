@@ -17,7 +17,8 @@ import {
   Apple,
   ClipboardList,
   Stethoscope,
-  BookmarkCheck
+  BookmarkCheck,
+  Heart
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -99,6 +100,28 @@ export const Sidebar: React.FC = () => {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* 3.5 BOTÓN ESPECIAL DE TU AMOR */}
+      <div className="px-4 mb-2">
+        <button
+          onClick={() => setActiveTab('amor')}
+          className={`w-full p-2.5 rounded-2xl text-left border transition-all cursor-pointer flex items-center gap-2.5 ${
+            activeTab === 'amor'
+              ? 'bg-gradient-to-r from-pink-600 to-rose-600 border-pink-400 text-white shadow-lg shadow-pink-500/25'
+              : 'bg-gradient-to-r from-pink-950/30 to-[#1e2038] border-pink-500/30 text-pink-200 hover:border-pink-400/60'
+          }`}
+        >
+          <div className="w-7 h-7 rounded-full bg-pink-500/30 flex items-center justify-center shrink-0">
+            <Heart className="w-3.5 h-3.5 text-pink-400 fill-pink-400 animate-pulse" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-bold text-white flex items-center gap-1">
+              <span>De tu Amor</span> <span>💖</span>
+            </p>
+            <p className="text-[10px] text-pink-300/80 truncate">Toca para ver tu sorpresa</p>
+          </div>
+        </button>
       </div>
 
       {/* 4. LISTA DE NAVEGACIÓN */}

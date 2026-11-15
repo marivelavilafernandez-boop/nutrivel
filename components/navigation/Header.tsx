@@ -11,7 +11,9 @@ import {
   Sparkles, 
   GraduationCap, 
   X,
-  CheckCircle2
+  CheckCircle2,
+  Menu,
+  Heart
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -23,7 +25,9 @@ export const Header: React.FC = () => {
     markNotificationRead, 
     clearAllNotifications,
     appMode,
-    activeTab
+    activeTab,
+    setActiveTab,
+    setIsMobileMenuOpen
   } = useNutriStore();
 
   const [showNotifications, setShowNotifications] = useState(false);
@@ -42,21 +46,31 @@ export const Header: React.FC = () => {
     tesis: 'Proyecto de Grado & Titulación UNIVIOR',
     apa: 'Generador de Citas Bibliográficas (APA 7)',
     profesional: 'Vista Previa • Consultorio Profesional',
-    configuracion: 'Configuración y Respaldo'
+    configuracion: 'Configuración y Respaldo',
+    amor: 'Para Ti, con Todo Mi Amor 💖'
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-white/95 dark:bg-[#141526]/95 backdrop-blur-md border-b border-gray-100 dark:border-[#262840] px-4 lg:px-8 flex items-center justify-between shadow-2xs">
+    <header className="sticky top-0 z-30 h-16 bg-white/95 dark:bg-[#141526]/95 backdrop-blur-md border-b border-gray-100 dark:border-[#262840] px-3 sm:px-4 lg:px-8 flex items-center justify-between shadow-2xs">
       
-      {/* Izquierda: Breadcrumbs y Título de Vista */}
-      <div className="flex items-center gap-3">
+      {/* Izquierda: Botón Menú Móvil + Breadcrumbs */}
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        {/* Botón Hamburguesa Móvil */}
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="lg:hidden p-2 rounded-xl text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+          aria-label="Abrir menú"
+        >
+          <Menu className="w-5 h-5 stroke-[2.5]" />
+        </button>
+
         <div>
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-400">
             <span>Nutrivel</span>
             <span>/</span>
             <span className="text-pink-600 dark:text-pink-400 capitalize">{activeTab}</span>
           </div>
-          <h2 className="text-sm font-extrabold text-gray-900 dark:text-gray-100 hidden sm:block">
+          <h2 className="text-sm font-extrabold text-gray-900 dark:text-gray-100 hidden sm:block truncate max-w-[200px] md:max-w-none">
             {tabTitles[activeTab] || 'Dashboard'}
           </h2>
         </div>
@@ -160,6 +174,21 @@ export const Header: React.FC = () => {
             </div>
           )}
         </div>
+
+        {/* Botón Romántico Especial: De tu Amor */}
+        <button
+          onClick={() => setActiveTab('amor')}
+          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
+            activeTab === 'amor'
+              ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white border-pink-400 shadow-md shadow-pink-500/30'
+              : 'bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-300 border-pink-200 dark:border-pink-800/60 hover:bg-pink-100'
+          }`}
+          title="Ver mensaje de tu amor"
+        >
+          <Heart className={`w-3.5 h-3.5 ${activeTab === 'amor' ? 'fill-white' : 'fill-pink-500 text-pink-500 animate-pulse'}`} />
+          <span className="text-xs font-extrabold hidden sm:inline">De tu Amor</span>
+          <span className="text-xs">💖</span>
+        </button>
 
         {/* Modo Oscuro / Claro */}
         <button

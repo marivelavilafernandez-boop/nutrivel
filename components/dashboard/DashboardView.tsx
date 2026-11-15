@@ -68,11 +68,11 @@ export const DashboardView: React.FC = () => {
     <div className="space-y-6 pb-12 animate-in fade-in duration-200">
       
       {/* 1. TOP SIGNATURE GRADIENT BANNER (Inspirado en el diseño de referencia: Barra magenta/rosa con 4 KPIs) */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#d946ef] via-[#ec4899] to-[#f43f5e] text-white p-6 sm:p-7 shadow-lg shadow-pink-500/20">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#d946ef] via-[#ec4899] to-[#f43f5e] text-white p-4 sm:p-7 shadow-lg shadow-pink-500/20">
         {/* Decoración sutil de fondo */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
 
-        <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-white/20">
+        <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 sm:divide-x divide-white/20">
           
           {/* KPI 1: Materias Activas */}
           <div className="pt-2 sm:pt-0 sm:px-4 first:sm:pl-0">
@@ -249,7 +249,7 @@ export const DashboardView: React.FC = () => {
               <span>Jul</span>
             </div>
 
-            <div className="flex items-center justify-center gap-6 mt-3 text-xs">
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-3 text-xs">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-[#ec4899]"></span>
                 <span className="text-gray-600 dark:text-gray-300 font-medium">Nutrición Clínica & Casos</span>

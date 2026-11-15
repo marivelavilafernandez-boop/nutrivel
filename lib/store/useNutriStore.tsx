@@ -31,6 +31,8 @@ interface NutriStoreContextType {
   toggleTheme: () => void;
   isSearchOpen: boolean;
   setIsSearchOpen: (open: boolean) => void;
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (open: boolean) => void;
 
   // Materias
   subjects: Subject[];
@@ -75,6 +77,7 @@ export const NutriStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [appMode, setAppModeState] = useState<AppMode>('student');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   const [subjects, setSubjects] = useState<Subject[]>(initialSubjects);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
@@ -268,6 +271,8 @@ export const NutriStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       toggleTheme,
       isSearchOpen,
       setIsSearchOpen,
+      isMobileMenuOpen,
+      setIsMobileMenuOpen,
       subjects,
       addSubject,
       updateSubject,

@@ -155,10 +155,10 @@ export const CalculadorasNutricionales: React.FC = () => {
         </div>
 
         {/* Selector de Calculadora */}
-        <div className="inline-flex p-1 rounded-2xl bg-gray-100 dark:bg-[#1a1c30] border border-gray-200/60 dark:border-[#2b2e4c]">
+        <div className="flex overflow-x-auto max-w-full p-1 rounded-2xl bg-gray-100 dark:bg-[#1a1c30] border border-gray-200/60 dark:border-[#2b2e4c]">
           <button
             onClick={() => setActiveTab('imc')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'imc'
                 ? 'bg-white dark:bg-[#252847] text-pink-600 dark:text-pink-400 shadow-xs'
                 : 'text-gray-500 hover:text-gray-800'
@@ -168,7 +168,7 @@ export const CalculadorasNutricionales: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('get')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'get'
                 ? 'bg-white dark:bg-[#252847] text-pink-600 dark:text-pink-400 shadow-xs'
                 : 'text-gray-500 hover:text-gray-800'
@@ -178,7 +178,7 @@ export const CalculadorasNutricionales: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('proteina')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'proteina'
                 ? 'bg-white dark:bg-[#252847] text-pink-600 dark:text-pink-400 shadow-xs'
                 : 'text-gray-500 hover:text-gray-800'
@@ -188,7 +188,7 @@ export const CalculadorasNutricionales: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('agua')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'agua'
                 ? 'bg-white dark:bg-[#252847] text-pink-600 dark:text-pink-400 shadow-xs'
                 : 'text-gray-500 hover:text-gray-800'

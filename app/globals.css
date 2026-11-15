@@ -59,3 +59,31 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.45);
 }
+
+
+/* Animación de corazones flotantes para Marivel */
+@keyframes float-love {
+  0% {
+    transform: translateY(0) scale(0.5) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-30px) scale(1.15) rotate(-10deg);
+  }
+  50% {
+    transform: translateY(-120px) scale(1) rotate(15deg);
+  }
+  80% {
+    opacity: 0.8;
+    transform: translateY(-240px) scale(0.95) rotate(-8deg);
+  }
+  100% {
+    transform: translateY(-380px) scale(0.7) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+.animate-float-love {
+  animation: float-love 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}

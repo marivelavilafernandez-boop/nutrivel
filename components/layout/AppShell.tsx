@@ -5,6 +5,7 @@ import { useNutriStore } from '@/lib/store/useNutriStore';
 import { Sidebar } from '../navigation/Sidebar';
 import { Header } from '../navigation/Header';
 import { MobileNav } from '../navigation/MobileNav';
+import { MobileDrawer } from '../navigation/MobileDrawer';
 import { GlobalSearchModal } from '../modals/GlobalSearchModal';
 
 import { DashboardView } from '../dashboard/DashboardView';
@@ -14,6 +15,7 @@ import { CalendarioView } from '../calendario/CalendarioView';
 import { ApuntesView } from '../apuntes/ApuntesView';
 import { ProfessionalPreview } from '../profesional/ProfessionalPreview';
 import { ConfiguracionView } from '../configuracion/ConfiguracionView';
+import { LoveLetterView } from '../love/LoveLetterView';
 
 // Nuevas herramientas clínicas de nutrición (Etapa 2)
 import { CalculadorasNutricionales } from '../nutricion/CalculadorasNutricionales';
@@ -54,21 +56,26 @@ export const AppShell: React.FC = () => {
         return <ProfessionalPreview />;
       case 'configuracion':
         return <ConfiguracionView />;
+      case 'amor':
+        return <LoveLetterView />;
       default:
         return <DashboardView />;
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-[#f8f9fd] dark:bg-[#0c0d17] text-gray-800 dark:text-gray-100">
+    <div className="min-h-screen flex bg-[#f8f9fd] dark:bg-[#0c0d17] text-gray-800 dark:text-gray-100 overflow-x-hidden">
       {/* Sidebar Desktop */}
       <Sidebar />
+
+      {/* Drawer Móvil Lateral */}
+      <MobileDrawer />
 
       {/* Área de Contenido Principal */}
       <div className="flex-1 flex flex-col min-w-0">
         <Header />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto pb-20 lg:pb-8">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto pb-24 lg:pb-8">
           {renderCurrentView()}
         </main>
       </div>
