@@ -91,34 +91,49 @@ export const CalculadorasNutricionales: React.FC = () => {
   const minHealthyWeight = parseFloat((18.5 * heightM * heightM).toFixed(1));
   const maxHealthyWeight = parseFloat((24.9 * heightM * heightM).toFixed(1));
 
+  // Peso Ajustado para Obesidad (Fórmula de Wilkens para IMC >= 30)
+  // PA = PI + 0.25 * (Peso Actual - PI)
+  const adjustedWeightWilkens = parseFloat(
+    (idealWeightLorentz + (0.25 * Math.max(0, weightKg - idealWeightLorentz))).toFixed(1)
+  );
+
   // ------------------ ESTADOS GET / TMB ------------------
-  const [formulaTmb, setFormulaTmb] = useState<'mifflin' | 'harris' | 'oms'>('mifflin');
+  const [formulaTmb, setFormulaTmb] = useState<'mifflin' | 'harris' | 'oms' | 'katch'>('mifflin');
+  const [bodyFatKatch, setBodyFatKatch] = useState<number>(24); // % Grasa para Katch-McArdle
+  const [useAdjustedWeight, setUseAdjustedWeight] = useState<boolean>(imc >= 30);
   const [activityFactor, setActivityFactor] = useState<number>(1.55); // Moderado
   const [stressFactor, setStressFactor] = useState<number>(1.0); // Sin estrés
   const [includeEta, setIncludeEta] = useState<boolean>(true); // ETA 10%
 
+  // Peso de cálculo (Actual o Ajustado si tiene obesidad)
+  const effectiveWeight = (useAdjustedWeight && imc >= 30) ? adjustedWeightWilkens : weightKg;
+
   // Cálculo TMB
   let tmb = 0;
   if (formulaTmb === 'mifflin') {
-    // Mifflin-St Jeor
+    // Mifflin-St Jeor (1990)
     tmb = gender === 'hombre'
-      ? (10 * weightKg) + (6.25 * heightCm) - (5 * age) + 5
-      : (10 * weightKg) + (6.25 * heightCm) - (5 * age) - 161;
+      ? (10 * effectiveWeight) + (6.25 * heightCm) - (5 * age) + 5
+      : (10 * effectiveWeight) + (6.25 * heightCm) - (5 * age) - 161;
   } else if (formulaTmb === 'harris') {
-    // Harris-Benedict (1984)
+    // Harris-Benedict revisada por Roza & Shizgal (1984)
     tmb = gender === 'hombre'
-      ? 88.362 + (13.397 * weightKg) + (4.799 * heightCm) - (5.677 * age)
-      : 447.593 + (9.247 * weightKg) + (3.098 * heightCm) - (4.330 * age);
+      ? 88.362 + (13.397 * effectiveWeight) + (4.799 * heightCm) - (5.677 * age)
+      : 447.593 + (9.247 * effectiveWeight) + (3.098 * heightCm) - (4.330 * age);
+  } else if (formulaTmb === 'katch') {
+    // Katch-McArdle (Basado en Masa Magra)
+    const leanMass = effectiveWeight * (1 - (bodyFatKatch / 100));
+    tmb = 370 + (21.6 * leanMass);
   } else {
-    // OMS / FAO
+    // OMS / FAO / UNU
     if (gender === 'hombre') {
-      if (age < 30) tmb = (15.3 * weightKg) + 679;
-      else if (age <= 60) tmb = (11.6 * weightKg) + 879;
-      else tmb = (13.5 * weightKg) + 487;
+      if (age < 30) tmb = (15.3 * effectiveWeight) + 679;
+      else if (age <= 60) tmb = (11.6 * effectiveWeight) + 879;
+      else tmb = (13.5 * effectiveWeight) + 487;
     } else {
-      if (age < 30) tmb = (14.7 * weightKg) + 496;
-      else if (age <= 60) tmb = (8.7 * weightKg) + 829;
-      else tmb = (10.5 * weightKg) + 596;
+      if (age < 30) tmb = (14.7 * effectiveWeight) + 496;
+      else if (age <= 60) tmb = (8.7 * effectiveWeight) + 829;
+      else tmb = (10.5 * effectiveWeight) + 596;
     }
   }
 
@@ -129,15 +144,23 @@ export const CalculadorasNutricionales: React.FC = () => {
   // ------------------ ESTADOS PROTEÍNA ------------------
   const [proteinCategory, setProteinCategory] = useState<number>(1.2); // 1.2 g/kg por defecto
 
-  const proteinGramsTotal = parseFloat((weightKg * proteinCategory).toFixed(1));
+  const proteinGramsTotal = parseFloat((effectiveWeight * proteinCategory).toFixed(1));
   const proteinKcalTotal = Math.round(proteinGramsTotal * 4);
   const proteinPercentageOfGet = getCalculated > 0 
     ? Math.round((proteinKcalTotal / getCalculated) * 100) 
     : 0;
 
   // ------------------ ESTADOS AGUA / HIDRATACIÓN ------------------
-  const waterByWeight = Math.round(weightKg * 35); // 35 ml/kg
-  const waterByKcal = Math.round(getCalculated * 1.0); // 1 ml/kcal
+  // Método 1: 30-35 ml/kg
+  const waterByWeight = Math.round(effectiveWeight * 35);
+  // Método 2: 1 ml/kcal
+  const waterByKcal = Math.round(getCalculated * 1.0);
+  // Método 3: Holliday-Segar
+  const waterHolliday = effectiveWeight <= 10 
+    ? Math.round(effectiveWeight * 100)
+    : effectiveWeight <= 20
+      ? Math.round(1000 + ((effectiveWeight - 10) * 50))
+      : Math.round(1500 + ((effectiveWeight - 20) * 20));
 
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-200">
@@ -416,8 +439,51 @@ export const CalculadorasNutricionales: React.FC = () => {
                 <option value="mifflin">Mifflin-St Jeor (Recomendada ADA / AND)</option>
                 <option value="harris">Harris-Benedict (Revisada 1984)</option>
                 <option value="oms">OMS / FAO / UNU</option>
+                <option value="katch">Katch-McArdle (Basada en Masa Magra)</option>
               </select>
             </div>
+
+            {/* Input adicional si seleccionó Katch-McArdle */}
+            {formulaTmb === 'katch' && (
+              <div className="p-3 rounded-2xl bg-pink-50 dark:bg-pink-950/20 border border-pink-200 dark:border-pink-900/50">
+                <label className="text-xs font-bold text-gray-700 dark:text-gray-300 block mb-1">
+                  % Grasa Corporal del Paciente (Bioimpedancia o Pliegues):
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    step="0.5"
+                    value={bodyFatKatch}
+                    onChange={e => setBodyFatKatch(parseFloat(e.target.value) || 0)}
+                    className="w-20 text-xs font-extrabold bg-white dark:bg-[#121816] border border-gray-300 dark:border-gray-700 rounded-xl p-2 outline-none"
+                  />
+                  <span className="text-xs font-bold text-gray-500">%</span>
+                  <span className="text-[11px] text-gray-400">
+                    Masa magra: {(effectiveWeight * (1 - (bodyFatKatch / 100))).toFixed(1)} kg
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Toggle Clínico: Peso Ajustado para Obesidad */}
+            {imc >= 30 && (
+              <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-xs">
+                <label className="flex items-start gap-2 cursor-pointer font-bold text-amber-900 dark:text-amber-200">
+                  <input
+                    type="checkbox"
+                    checked={useAdjustedWeight}
+                    onChange={e => setUseAdjustedWeight(e.target.checked)}
+                    className="mt-0.5 rounded text-amber-600 focus:ring-amber-500"
+                  />
+                  <div>
+                    <span>Usar Peso Ajustado de Wilkens ({adjustedWeightWilkens} kg)</span>
+                    <p className="font-normal text-[11px] text-amber-700 dark:text-amber-300 mt-0.5 leading-relaxed">
+                      Criterio clínico: En obesidad (IMC &ge; 30), el tejido adiposo no activo distorsiona los requerimientos. Se aconseja usar el peso ajustado en lugar de los {weightKg} kg actuales.
+                    </p>
+                  </div>
+                </label>
+              </div>
+            )}
 
             {/* Factor de Actividad Física (FA) */}
             <div>
@@ -651,6 +717,16 @@ export const CalculadorasNutricionales: React.FC = () => {
                   {(waterByKcal / 1000).toFixed(2)} <span className="text-base font-normal">Litros / día</span>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">Basado en el GET calculado ({getCalculated} kcal).</div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Método Holliday-Segar (Clínico Hospitalario)</span>
+                <div className="text-3xl font-extrabold text-indigo-700 dark:text-indigo-300 mt-1">
+                  {(waterHolliday / 1000).toFixed(2)} <span className="text-base font-normal">Litros / día</span>
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  Primeros 10kg: 100 ml/kg • 11-20kg: 50 ml/kg • &gt;20kg: 20 ml/kg.
+                </div>
               </div>
             </div>
           </div>

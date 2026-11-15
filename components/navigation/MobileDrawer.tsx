@@ -19,7 +19,9 @@ import {
   BookmarkCheck,
   Heart,
   X,
-  Briefcase
+  Briefcase,
+  Scale,
+  AlertTriangle
 } from 'lucide-react';
 
 export const MobileDrawer: React.FC = () => {
@@ -52,6 +54,9 @@ export const MobileDrawer: React.FC = () => {
 
   const nutritionTools = [
     { id: 'calculadoras', label: 'Calculadoras Clínicas', icon: Calculator },
+    { id: 'antropometria', label: 'Antropometría & Grasa', icon: Scale },
+    { id: 'tamizaje', label: 'Tamizaje MUST Hospital', icon: AlertTriangle },
+    { id: 'anamnesis', label: 'Ficha Anamnesis (R24h)', icon: FileText },
     { id: 'tbca', label: 'Tabla Alimentos (TBCA)', icon: Apple },
     { id: 'minutas', label: 'Armador de Minutas', icon: ClipboardList },
     { id: 'casos', label: 'Casos Clínicos (PES)', icon: Stethoscope },

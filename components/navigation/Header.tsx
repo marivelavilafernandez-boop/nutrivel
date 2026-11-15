@@ -45,6 +45,9 @@ export const Header: React.FC = () => {
     casos: 'Casos Clínicos & Diagnóstico PES',
     tesis: 'Proyecto de Grado & Titulación UNIVIOR',
     apa: 'Generador de Citas Bibliográficas (APA 7)',
+    antropometria: 'Evaluación Antropométrica & Grasa Corporal (ISAK / OMS)',
+    tamizaje: 'Tamizaje Nutricional Clínico Hospitalario (MUST)',
+    anamnesis: 'Ficha de Anamnesis Nutricional & Consulta',
     profesional: 'Vista Previa • Consultorio Profesional',
     configuracion: 'Configuración y Respaldo',
     amor: 'Para Ti, con Todo Mi Amor 💖'

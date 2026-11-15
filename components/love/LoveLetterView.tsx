@@ -108,10 +108,10 @@ export const LoveLetterView: React.FC = () => {
           <div className="text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold mb-3 shadow-xs">
               <Heart className="w-3.5 h-3.5 fill-white animate-pulse" />
-              <span>Para ti, con todo mi amor</span>
+              <span>De Jhosep Anthony para Marivel • Con todo mi amor</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-              ¡Hola, mi hermosa Marivel! 💕
+              ¡Hola, mi hermosa Marivel Avila Fernandez! 💕
             </h1>
             <p className="text-sm sm:text-base text-pink-100 max-w-xl mt-2 leading-relaxed">
               Quería darte este rincón especial en tu plataforma para recordarte lo mucho que te amo y lo infinitamente orgulloso que estoy de ti.
@@ -158,10 +158,10 @@ export const LoveLetterView: React.FC = () => {
             </div>
 
             <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-4">
-              Marivel Avila Fernández
+              Marivel Avila Fernandez & Jhosep Anthony
             </h3>
             <p className="text-xs text-pink-600 dark:text-pink-400 font-semibold">
-              Mi persona favorita en el mundo entero
+              Juntos en cada meta y en cada sueño • Mi amor eterno
             </p>
           </div>
 
@@ -214,13 +214,15 @@ export const LoveLetterView: React.FC = () => {
               </p>
 
               <p className="pt-2 font-bold text-pink-600 dark:text-pink-400 text-sm">
-                ¡Te amo con todo mi ser, hoy y siempre! ❤️
+                ¡Te amo con todo mi corazón, hoy, mañana y siempre! ❤️
               </p>
             </div>
 
-            <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-xs text-gray-400">
-              <span>Hecho con todo mi amor para ti</span>
-              <span className="font-bold text-gray-700 dark:text-gray-300">Tu Novio que te adora 💑</span>
+            <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-400 gap-2">
+              <span>Creado con devoción para mi futura licenciada</span>
+              <span className="font-extrabold text-pink-600 dark:text-pink-400 text-xs">
+                Tu novio: Jhosep Anthony Caceres Saldaña 💑
+              </span>
             </div>
           </div>
 

@@ -24,6 +24,9 @@ import { ArmadorPlanesView } from '../nutricion/ArmadorPlanesView';
 import { CasosClinicosView } from '../nutricion/CasosClinicosView';
 import { TesisGradoView } from '../nutricion/TesisGradoView';
 import { GeneradorApaView } from '../nutricion/GeneradorApaView';
+import { AntropometriaAvanzadaView } from '../nutricion/AntropometriaAvanzadaView';
+import { TamizajeNutricionalView } from '../nutricion/TamizajeNutricionalView';
+import { AnamnesisClinicaView } from '../nutricion/AnamnesisClinicaView';
 
 export const AppShell: React.FC = () => {
   const { activeTab } = useNutriStore();
@@ -52,6 +55,12 @@ export const AppShell: React.FC = () => {
         return <TesisGradoView />;
       case 'apa':
         return <GeneradorApaView />;
+      case 'antropometria':
+        return <AntropometriaAvanzadaView />;
+      case 'tamizaje':
+        return <TamizajeNutricionalView />;
+      case 'anamnesis':
+        return <AnamnesisClinicaView />;
       case 'profesional':
         return <ProfessionalPreview />;
       case 'configuracion':
