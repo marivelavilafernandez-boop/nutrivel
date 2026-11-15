@@ -44,7 +44,7 @@ export const ConfiguracionView: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `NutriPanel_Backup_Marivel_${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `Nutrivel_Backup_Marivel_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -96,7 +96,7 @@ export const ConfiguracionView: React.FC = () => {
           <div>
             <h3 className="font-bold text-base text-gray-900 dark:text-gray-100 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#e07a5f]" />
-              Modo de Operación de NutriPanel
+              Modo de Operación de Nutrivel
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-xl">
               Permite alternar entre la plataforma académica de estudio y la suite profesional de atención a pacientes. Todos los datos de ambos modos se conservan de forma permanente.

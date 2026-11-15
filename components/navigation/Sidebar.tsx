@@ -38,7 +38,7 @@ export const Sidebar: React.FC = () => {
           </div>
           <div>
             <h1 className="font-bold text-base tracking-tight text-gray-900 dark:text-gray-100 flex items-center gap-1.5">
-              NutriPanel
+              Nutrivel
             </h1>
             <span className="text-[11px] font-medium text-gray-400 block">
               {appMode === 'student' ? 'Modo Estudiante' : 'Modo Profesional'}

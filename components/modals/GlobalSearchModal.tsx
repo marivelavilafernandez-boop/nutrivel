@@ -64,7 +64,7 @@ export const GlobalSearchModal: React.FC = () => {
         <div className="max-h-[60vh] overflow-y-auto p-4 space-y-4">
           {!q ? (
             <div className="py-8 text-center text-sm text-gray-400">
-              Escribe para buscar en todas las áreas de <span className="font-semibold text-[#1e5e4b] dark:text-[#82c4ae]">NutriPanel</span>.
+              Escribe para buscar en todas las áreas de <span className="font-semibold text-[#1e5e4b] dark:text-[#82c4ae]">Nutrivel</span>.
               <p className="mt-1 text-xs">Atajo rápido: <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-gray-600 dark:text-gray-300">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-gray-600 dark:text-gray-300">K</kbd></p>
             </div>
           ) : (

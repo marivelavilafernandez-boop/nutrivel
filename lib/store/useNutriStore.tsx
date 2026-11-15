@@ -85,26 +85,26 @@ export const NutriStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // Carga inicial desde localStorage
   useEffect(() => {
     try {
-      const storedTheme = localStorage.getItem('nutripanel_theme') as 'light' | 'dark';
+      const storedTheme = localStorage.getItem('nutrivel_theme') as 'light' | 'dark';
       if (storedTheme) {
         setTheme(storedTheme);
         if (storedTheme === 'dark') document.documentElement.classList.add('dark');
         else document.documentElement.classList.remove('dark');
       }
 
-      const storedMode = localStorage.getItem('nutripanel_mode') as AppMode;
+      const storedMode = localStorage.getItem('nutrivel_mode') as AppMode;
       if (storedMode) setAppModeState(storedMode);
 
-      const storedTasks = localStorage.getItem('nutripanel_tasks');
+      const storedTasks = localStorage.getItem('nutrivel_tasks');
       if (storedTasks) setTasks(JSON.parse(storedTasks));
 
-      const storedSubjects = localStorage.getItem('nutripanel_subjects');
+      const storedSubjects = localStorage.getItem('nutrivel_subjects');
       if (storedSubjects) setSubjects(JSON.parse(storedSubjects));
 
-      const storedNotes = localStorage.getItem('nutripanel_notes');
+      const storedNotes = localStorage.getItem('nutrivel_notes');
       if (storedNotes) setNotes(JSON.parse(storedNotes));
 
-      const storedEvents = localStorage.getItem('nutripanel_events');
+      const storedEvents = localStorage.getItem('nutrivel_events');
       if (storedEvents) setEvents(JSON.parse(storedEvents));
     } catch (e) {
       console.warn('Error leyendo localStorage:', e);
@@ -114,32 +114,32 @@ export const NutriStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // Guardar en localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('nutripanel_tasks', JSON.stringify(tasks));
+      localStorage.setItem('nutrivel_tasks', JSON.stringify(tasks));
     } catch {}
   }, [tasks]);
 
   useEffect(() => {
     try {
-      localStorage.setItem('nutripanel_subjects', JSON.stringify(subjects));
+      localStorage.setItem('nutrivel_subjects', JSON.stringify(subjects));
     } catch {}
   }, [subjects]);
 
   useEffect(() => {
     try {
-      localStorage.setItem('nutripanel_notes', JSON.stringify(notes));
+      localStorage.setItem('nutrivel_notes', JSON.stringify(notes));
     } catch {}
   }, [notes]);
 
   useEffect(() => {
     try {
-      localStorage.setItem('nutripanel_events', JSON.stringify(events));
+      localStorage.setItem('nutrivel_events', JSON.stringify(events));
     } catch {}
   }, [events]);
 
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
-    localStorage.setItem('nutripanel_theme', nextTheme);
+    localStorage.setItem('nutrivel_theme', nextTheme);
     if (nextTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -150,7 +150,7 @@ export const NutriStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const setAppMode = (mode: AppMode) => {
     setAppModeState(mode);
     setProfile(prev => ({ ...prev, currentMode: mode }));
-    localStorage.setItem('nutripanel_mode', mode);
+    localStorage.setItem('nutrivel_mode', mode);
   };
 
   // Acciones Materias

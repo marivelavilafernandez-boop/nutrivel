@@ -1,4 +1,4 @@
-// Utilidades de formato de fechas y helpers para NutriPanel (Zona horaria: America/La_Paz)
+// Utilidades de formato de fechas y helpers para Nutrivel (Zona horaria: America/La_Paz)
 
 export function formatDateLaPaz(dateInput: string | Date): string {
   try {
