@@ -76,7 +76,7 @@ export const MateriasView: React.FC = () => {
       targetGrade: Number(newTargetGrade),
       minPassingGrade: 51,
       colorHex: newColor,
-      semester: 9,
+      semester: 6,
       status: 'in_progress',
       schedule: [
         { day: 'Lunes', startTime: '08:00', endTime: '10:00', classroom: newClassroom || 'Aula 1' }

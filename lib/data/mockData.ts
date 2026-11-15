@@ -6,7 +6,7 @@ export const initialProfile: UserProfile = {
   email: 'marivelavilafernandez@gmail.com',
   university: 'Universidad Villa de Oropesa (UNIVIOR)',
   career: 'Licenciatura en Nutrición y Dietética',
-  currentSemester: 9,
+  currentSemester: 6,
   totalSemesters: 10,
   expectedGraduation: 'Diciembre 2027',
   avatarUrl: 'https://images.unsplash.com/photo-1594824813515-5853f0cf871e?auto=format&fit=crop&q=80&w=250',
@@ -30,7 +30,7 @@ export const initialSubjects: Subject[] = [
     targetGrade: 85,
     minPassingGrade: 51,
     colorHex: '#1E5E4B', // Esmeralda clínico
-    semester: 9,
+    semester: 6,
     status: 'in_progress',
     syllabusTopicCount: 16,
     completedTopicsCount: 11,
@@ -51,7 +51,7 @@ export const initialSubjects: Subject[] = [
     targetGrade: 90,
     minPassingGrade: 51,
     colorHex: '#E07A5F', // Terracota cálido
-    semester: 9,
+    semester: 6,
     status: 'in_progress',
     syllabusTopicCount: 14,
     completedTopicsCount: 10,
@@ -72,7 +72,7 @@ export const initialSubjects: Subject[] = [
     targetGrade: 80,
     minPassingGrade: 51,
     colorHex: '#2A9D8F', // Verde mar
-    semester: 9,
+    semester: 6,
     status: 'in_progress',
     syllabusTopicCount: 12,
     completedTopicsCount: 8,
@@ -92,7 +92,7 @@ export const initialSubjects: Subject[] = [
     targetGrade: 90,
     minPassingGrade: 51,
     colorHex: '#D4A373', // Ocre andino
-    semester: 9,
+    semester: 6,
     status: 'in_progress',
     syllabusTopicCount: 10,
     completedTopicsCount: 7,
@@ -112,7 +112,7 @@ export const initialSubjects: Subject[] = [
     targetGrade: 90,
     minPassingGrade: 51,
     colorHex: '#457B9D', // Azul acero
-    semester: 9,
+    semester: 6,
     status: 'in_progress',
     syllabusTopicCount: 8,
     completedTopicsCount: 5,
@@ -132,7 +132,7 @@ export const initialSubjects: Subject[] = [
     targetGrade: 95,
     minPassingGrade: 51,
     colorHex: '#8338EC', // Violeta clínico
-    semester: 9,
+    semester: 6,
     status: 'in_progress',
     syllabusTopicCount: 10,
     completedTopicsCount: 8,
