@@ -8,11 +8,10 @@ import {
   Moon, 
   Bell, 
   Clock, 
-  Settings, 
   Sparkles, 
   GraduationCap, 
-  CheckCircle2, 
-  X
+  X,
+  CheckCircle2
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -24,124 +23,159 @@ export const Header: React.FC = () => {
     markNotificationRead, 
     clearAllNotifications,
     appMode,
-    setAppMode,
-    setActiveTab
+    activeTab
   } = useNutriStore();
 
   const [showNotifications, setShowNotifications] = useState(false);
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  return (
-    <header className="sticky top-0 z-30 h-16 bg-white/90 dark:bg-[#18221f]/90 backdrop-blur-md border-b border-[#e2ddd3] dark:border-[#293a34] px-4 lg:px-8 flex items-center justify-between">
-      {/* Izquierda: Buscador Global */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => setIsSearchOpen(true)}
-          className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-[#f0ebe1] dark:bg-[#1e2b26] border border-[#e2ddd3] dark:border-[#293a34] text-xs text-gray-500 dark:text-gray-400 hover:border-gray-400 transition-colors cursor-pointer"
-        >
-          <Search className="w-3.5 h-3.5 text-gray-400" />
-          <span className="hidden sm:inline">Buscar materias, tareas, apuntes...</span>
-          <span className="sm:hidden">Buscar...</span>
-          <kbd className="hidden md:inline px-1.5 py-0.5 text-[10px] bg-white dark:bg-[#121816] rounded border border-gray-200 dark:border-gray-700 text-gray-400">
-            Ctrl K
-          </kbd>
-        </button>
+  const tabTitles: Record<string, string> = {
+    dashboard: 'Panel de Control (Dashboard)',
+    materias: 'Mis Materias & Calculadora de Notas',
+    trabajos: 'Trabajos, Tareas & Entregas',
+    calendario: 'Calendario Académico y Turnos',
+    apuntes: 'Apuntes Clínicos y Guías',
+    profesional: 'Vista Previa • Consultorio Profesional',
+    configuracion: 'Configuración y Respaldo'
+  };
 
-        {/* Zona Horaria */}
-        <div className="hidden xl:flex items-center gap-1.5 text-xs text-gray-400 border-l border-gray-200 dark:border-gray-800 pl-3">
-          <Clock className="w-3.5 h-3.5 text-emerald-600" />
-          <span>La Paz (UTC-4)</span>
+  return (
+    <header className="sticky top-0 z-30 h-16 bg-white/95 dark:bg-[#141526]/95 backdrop-blur-md border-b border-gray-100 dark:border-[#262840] px-4 lg:px-8 flex items-center justify-between shadow-2xs">
+      
+      {/* Izquierda: Breadcrumbs y Título de Vista */}
+      <div className="flex items-center gap-3">
+        <div>
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-400">
+            <span>Nutrivel</span>
+            <span>/</span>
+            <span className="text-pink-600 dark:text-pink-400 capitalize">{activeTab}</span>
+          </div>
+          <h2 className="text-sm font-extrabold text-gray-900 dark:text-gray-100 hidden sm:block">
+            {tabTitles[activeTab] || 'Dashboard'}
+          </h2>
         </div>
       </div>
 
-      {/* Derecha: Notificaciones, Modo, Tema, Perfil */}
+      {/* Centro: Buscador estilo pill como en el diseño */}
+      <div className="flex-1 max-w-md mx-4 hidden md:block">
+        <button
+          onClick={() => setIsSearchOpen(true)}
+          className="w-full flex items-center justify-between px-4 py-2 rounded-2xl bg-gray-50 dark:bg-[#1a1c30] border border-gray-200/70 dark:border-[#2b2e4c] text-xs text-gray-400 hover:border-pink-300 dark:hover:border-pink-500/50 transition-all cursor-pointer shadow-2xs"
+        >
+          <div className="flex items-center gap-2">
+            <Search className="w-3.5 h-3.5 text-gray-400" />
+            <span>Buscar materias, tareas, dietas, apuntes...</span>
+          </div>
+          <kbd className="px-1.5 py-0.5 text-[10px] bg-white dark:bg-[#141526] rounded-md border border-gray-200 dark:border-gray-700 text-gray-400 font-mono">
+            Ctrl K
+          </kbd>
+        </button>
+      </div>
+
+      {/* Derecha: Hora local, Notificaciones, Modo, Perfil */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Badge de Modo */}
-        <div className="flex items-center">
-          {appMode === 'student' ? (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#1e5e4b]/10 text-[#1e5e4b] dark:bg-[#2e7d62]/20 dark:text-[#82c4ae] border border-[#1e5e4b]/20">
-              <GraduationCap className="w-3.5 h-3.5" />
-              <span className="hidden xs:inline">Modo Estudiante</span>
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#e07a5f]/15 text-[#e07a5f] border border-[#e07a5f]/30">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span className="hidden xs:inline">Modo Profesional</span>
-            </span>
-          )}
+        
+        {/* Hora La Paz */}
+        <div className="hidden xl:flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 px-2.5 py-1 rounded-xl bg-gray-50 dark:bg-[#1a1c30] border border-gray-100 dark:border-gray-800">
+          <Clock className="w-3.5 h-3.5 text-pink-500" />
+          <span className="font-medium">La Paz (UTC-4)</span>
         </div>
+
+        {/* Botón Buscar Móvil */}
+        <button
+          onClick={() => setIsSearchOpen(true)}
+          className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 md:hidden"
+          title="Buscar"
+        >
+          <Search className="w-4 h-4" />
+        </button>
 
         {/* Notificaciones */}
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-[#f0ebe1] dark:hover:bg-[#1e2b26] relative transition-colors"
+            className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 relative transition-colors cursor-pointer"
             title="Notificaciones"
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#e07a5f] animate-pulse" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-pink-500 ring-2 ring-white dark:ring-[#141526] animate-pulse" />
             )}
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#18221f] rounded-2xl shadow-xl border border-[#e2ddd3] dark:border-[#293a34] p-3 z-50 animate-in fade-in zoom-in-95 duration-100">
+            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#1a1c30] rounded-3xl shadow-2xl border border-gray-100 dark:border-[#2b2e4c] p-4 z-50 animate-in fade-in zoom-in-95 duration-100">
               <div className="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-gray-800">
                 <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
-                  Notificaciones ({unreadCount} sin leer)
+                  Notificaciones ({unreadCount})
                 </span>
                 {unreadCount > 0 && (
                   <button
                     onClick={clearAllNotifications}
-                    className="text-[11px] text-[#1e5e4b] dark:text-[#82c4ae] hover:underline"
+                    className="text-[11px] text-pink-600 dark:text-pink-400 hover:underline font-semibold"
                   >
                     Marcar todo leído
                   </button>
                 )}
               </div>
-              <div className="max-h-72 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-800 py-1">
-                {notifications.map(n => (
-                  <div
-                    key={n.id}
-                    onClick={() => {
-                      markNotificationRead(n.id);
-                      if (n.linkTab) setActiveTab(n.linkTab);
-                      setShowNotifications(false);
-                    }}
-                    className={`p-2.5 rounded-xl text-left cursor-pointer transition-colors ${
-                      n.read ? 'opacity-70 hover:bg-gray-50 dark:hover:bg-gray-900/40' : 'bg-[#1e5e4b]/5 dark:bg-[#2e7d62]/10 hover:bg-[#1e5e4b]/10'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="text-xs font-semibold text-gray-900 dark:text-gray-100">{n.title}</span>
-                      {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-[#e07a5f] shrink-0 mt-1" />}
-                    </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{n.message}</p>
+
+              <div className="max-h-72 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-800 my-2">
+                {notifications.length === 0 ? (
+                  <div className="py-6 text-center text-xs text-gray-400">
+                    No tienes notificaciones pendientes
                   </div>
-                ))}
+                ) : (
+                  notifications.map(n => (
+                    <div
+                      key={n.id}
+                      onClick={() => markNotificationRead(n.id)}
+                      className={`py-2.5 px-2 rounded-xl cursor-pointer transition-colors ${
+                        !n.read ? 'bg-pink-50/50 dark:bg-pink-950/20' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="text-xs font-bold text-gray-800 dark:text-gray-200">
+                          {n.title}
+                        </span>
+                        {!n.read && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-pink-500 shrink-0 mt-1" />
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
+                        {n.message}
+                      </p>
+                      <span className="text-[10px] text-gray-400 mt-1 block">
+                        {new Date(n.createdAt).toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           )}
         </div>
 
-        {/* Toggle Tema Claro / Oscuro */}
+        {/* Modo Oscuro / Claro */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-[#f0ebe1] dark:hover:bg-[#1e2b26] transition-colors"
-          title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
+          className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+          title={theme === 'light' ? 'Activar Modo Oscuro' : 'Activar Modo Claro'}
         >
-          {theme === 'light' ? <Moon className="w-4 h-4 text-gray-700" /> : <Sun className="w-4 h-4 text-amber-400" />}
+          {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4 text-amber-400" />}
         </button>
 
-        {/* Configuración rápida en móvil */}
-        <button
-          onClick={() => setActiveTab('configuracion')}
-          className="lg:hidden p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-[#f0ebe1] dark:hover:bg-[#1e2b26]"
-          title="Ajustes"
-        >
-          <Settings className="w-4 h-4" />
-        </button>
+        {/* Avatar Usuario como en la esquina de la imagen de referencia */}
+        <div className="flex items-center gap-2 pl-2 border-l border-gray-100 dark:border-gray-800">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center font-bold text-xs ring-2 ring-pink-500/20">
+            MA
+          </div>
+          <span className="text-xs font-bold text-gray-800 dark:text-gray-200 hidden lg:inline">
+            Marivel Avila
+          </span>
+        </div>
+
       </div>
+
     </header>
   );
 };

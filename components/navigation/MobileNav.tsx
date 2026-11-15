@@ -33,14 +33,14 @@ export const MobileNav: React.FC = () => {
             onClick={() => setActiveTab(item.id)}
             className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all relative ${
               isActive
-                ? 'text-[#1e5e4b] dark:text-[#82c4ae] font-semibold'
+                ? 'text-pink-600 dark:text-pink-400 font-bold'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-800'
             }`}
           >
             <div className="relative">
               <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5]' : ''}`} />
               {item.badge !== undefined && item.badge > 0 && (
-                <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-[#e07a5f] text-white text-[9px] font-bold flex items-center justify-center">
+                <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-pink-500 text-white text-[9px] font-bold flex items-center justify-center">
                   {item.badge}
                 </span>
               )}

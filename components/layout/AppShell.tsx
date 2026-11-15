@@ -40,7 +40,7 @@ export const AppShell: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#fbf9f5] dark:bg-[#111715] text-[#1c2826] dark:text-[#f3efe6]">
+    <div className="min-h-screen flex bg-[#f8f9fd] dark:bg-[#0c0d17] text-gray-800 dark:text-gray-100">
       {/* Sidebar Desktop */}
       <Sidebar />
 
