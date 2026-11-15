@@ -41,6 +41,8 @@ export const Header: React.FC = () => {
     apuntes: 'Apuntes Clínicos y Guías',
     calculadoras: 'Calculadoras Nutricionales (IMC, TMB, GET, Proteínas)',
     requerimiento: 'Requerimiento Energético Multi-Fórmula (7 Ecuaciones Clínicas)',
+    hidrico: 'Requerimiento Hídrico Clínico (Holliday-Segar / ml/kg / Balance)',
+    fichaclinica: 'Ficha Clínica Nutricional & Examen Físico Carencial',
     bioquimica: 'Ficha Bioquímica de Laboratorio Clínico',
     frecuencia: 'Cuestionario de Frecuencia de Consumo de Alimentos (FFQ)',
     tbca: 'Tabla Boliviana de Composición de Alimentos (TBCA)',

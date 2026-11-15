@@ -33,6 +33,8 @@ import { AnamnesisClinicaView } from '../nutricion/AnamnesisClinicaView';
 import { FichaBioquimicaView } from '../nutricion/FichaBioquimicaView';
 import { FrecuenciaConsumoView } from '../nutricion/FrecuenciaConsumoView';
 import { RequerimientoMultiFormulaView } from '../nutricion/RequerimientoMultiFormulaView';
+import { RequerimientoHidricoView } from '../nutricion/RequerimientoHidricoView';
+import { FichaClinicaIntegralView } from '../nutricion/FichaClinicaIntegralView';
 
 export const AppShell: React.FC = () => {
   const { activeTab } = useNutriStore();
@@ -53,6 +55,10 @@ export const AppShell: React.FC = () => {
         return <CalculadorasNutricionales />;
       case 'requerimiento':
         return <RequerimientoMultiFormulaView />;
+      case 'hidrico':
+        return <RequerimientoHidricoView />;
+      case 'fichaclinica':
+        return <FichaClinicaIntegralView />;
       case 'bioquimica':
         return <FichaBioquimicaView />;
       case 'frecuencia':
