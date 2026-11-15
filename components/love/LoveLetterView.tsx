@@ -29,13 +29,13 @@ export const LoveLetterView: React.FC = () => {
   const [currentAffirmationIndex, setCurrentAffirmationIndex] = useState<number>(0);
 
   const affirmations = [
-    '¡Eres la mujer más hermosa, dulce e inteligente del universo! 🌹',
-    '¡Vas a ser la mejor Nutrióloga de Bolivia y de todo el mundo! 🥗🎓',
-    '¡Estoy inmensamente orgulloso de tu dedicación en la UNIVIOR! 🌟',
-    '¡Gracias por hacerme el hombre más feliz con solo sonreír! 🥰',
-    '¡Nunca olvides lo valiosa, capaz y brillante que eres! ✨',
-    '¡Siempre voy a estar a tu lado apoyando cada uno de tus sueños! 💑',
-    '¡Te amo más de lo que cualquier palabra o código puede expresar! ❤️'
+    '¡Eres la mujer más hermosa, dulce e inteligente del universo, mi amorchito! 🌹',
+    '¡Te amo kaka con toda mi alma y mi corazón! 💖',
+    '¡Vas a ser la mejor Nutrióloga de Bolivia y de todo el mundo, mi amorchito! 🥗🎓',
+    '¡Aquí está tu potito para cuidarte, apoyarte y darte besitos siempre! 🥰',
+    '¡Estoy inmensamente orgulloso de tu dedicación en la UNIVIOR, mi vida hermosa! 🌟',
+    '¡Nunca olvides lo valiosa, capaz y brillante que eres, mi amorchito bella! ✨',
+    '¡Te amo kaka, hoy, mañana y hasta viejitos juntos! 💑❤️'
   ];
 
   const emergencyNotes = [
@@ -55,7 +55,7 @@ export const LoveLetterView: React.FC = () => {
       title: '💌 Para cuando me extrañes o necesites un abrazo',
       badge: 'Amor puro',
       color: 'from-pink-500/20 to-rose-500/10 border-pink-200 dark:border-pink-800 text-pink-800 dark:text-pink-200',
-      message: 'Cierra los ojos un momento y siente este abrazo apretado que te mando con todo mi corazón. No importa la distancia ni la hora, mi amor por ti siempre está contigo cuidándote. ¡Te amo con locura!'
+      message: 'Cierra los ojos un momento y siente este abrazo apretado de tu potito. Recuerda que tu novio te ama kaka con toda su alma y que no importa la hora ni la distancia, siempre estoy a tu lado cuidándote, mi amorchito hermosa.'
     }
   ];
 
@@ -198,7 +198,7 @@ export const LoveLetterView: React.FC = () => {
           <div className="flex-1 bg-white dark:bg-[#18221f] rounded-3xl p-6 border border-gray-100 dark:border-[#293a34] shadow-xs flex flex-col justify-between">
             <div className="space-y-3.5 text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
               <p className="font-semibold text-gray-900 dark:text-gray-100 text-base">
-                Mi amor linda,
+                Mi amorchito linda (te amo kaka ❤️),
               </p>
               
               <p>
@@ -210,18 +210,18 @@ export const LoveLetterView: React.FC = () => {
               </p>
 
               <p>
-                Hice todo esto con mucho cariño para ti, para que tengas una herramienta que te facilite la vida como estudiante y futura licenciada. Pero por encima de cualquier nota o trabajo, quiero que nunca olvides que <strong>eres una mujer increíble, brillante y hermosa</strong>, y que siempre voy a estar aquí para cuidarte, apoyarte y aplaudir cada uno de tus triunfos.
+                Hice todo esto con mucho cariño para ti, para que tengas una herramienta que te facilite la vida como estudiante y futura licenciada. Pero por encima de cualquier nota o trabajo, quiero que nunca olvides que <strong>eres una mujer increíble, brillante y hermosa</strong>, y que aquí siempre estará tu novio para cuidarte, apoyarte y aplaudir cada uno de tus triunfos.
               </p>
 
               <p className="pt-2 font-bold text-pink-600 dark:text-pink-400 text-sm">
-                ¡Te amo con todo mi corazón, hoy, mañana y siempre! ❤️
+                ¡Te amo kaka con todo mi corazón, hoy, mañana y siempre, mi amorchito! ❤️✨
               </p>
             </div>
 
             <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-400 gap-2">
               <span>Creado con devoción para mi futura licenciada</span>
               <span className="font-extrabold text-pink-600 dark:text-pink-400 text-xs">
-                Tu novio: Jhosep Anthony Caceres Saldaña 💑
+                Tu novio (tu potito): Jhosep Anthony Caceres Saldaña 💑
               </span>
             </div>
           </div>
