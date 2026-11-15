@@ -21,7 +21,10 @@ import {
   X,
   Briefcase,
   Scale,
-  AlertTriangle
+  AlertTriangle,
+  FlaskConical,
+  ClipboardCheck,
+  Flame
 } from 'lucide-react';
 
 export const MobileDrawer: React.FC = () => {
@@ -54,6 +57,9 @@ export const MobileDrawer: React.FC = () => {
 
   const nutritionTools = [
     { id: 'calculadoras', label: 'Calculadoras Clínicas', icon: Calculator },
+    { id: 'requerimiento', label: 'Requerimiento Multi-Fórmula', icon: Flame },
+    { id: 'bioquimica', label: 'Ficha Bioquímica (Lab)', icon: FlaskConical },
+    { id: 'frecuencia', label: 'Frecuencia de Consumo (FFQ)', icon: ClipboardCheck },
     { id: 'antropometria', label: 'Antropometría & Grasa', icon: Scale },
     { id: 'tamizaje', label: 'Tamizaje MUST Hospital', icon: AlertTriangle },
     { id: 'anamnesis', label: 'Ficha Anamnesis (R24h)', icon: FileText },

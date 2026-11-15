@@ -226,3 +226,52 @@ export interface ApaReference {
   subjectId?: string;
 }
 
+// ----------------- MÓDULOS DEL EXCEL NUTRICIONAL CLÍNICO (FABIOLA SG.B) -----------------
+
+export interface BiochemicalIndicator {
+  id: string;
+  name: string;
+  unit: string;
+  referenceRange: string;
+  minVal?: number;
+  maxVal?: number;
+  result?: number;
+  interpretation?: 'NIVELES BAJOS' | 'NORMAL' | 'NIVELES ELEVADOS';
+  category: 'Metabolismo & Glucosa' | 'Perfil Lipídico' | 'Función Renal & Hepática' | 'Hematología & Hierro' | 'Electrolitos & Minerales' | 'Vitaminas';
+  clinicalMeaning: string;
+}
+
+export interface FoodFrequencyEntry {
+  id: string;
+  foodName: string;
+  category: 'CARNES Y PROCESADOS' | 'VERDURAS' | 'TUBÉRCULOS' | 'FRUTAS' | 'LEGUMINOSAS Y CEREALES' | 'FRECUENTES / ULTRAPROCESADOS';
+  frequency: 'cada_dia' | '2_veces_semana' | 'cada_mes' | '1_a_2_mes' | 'a_veces' | 'nunca' | '';
+}
+
+export interface DetailedDietFoodItem {
+  id: string;
+  foodCode?: string;
+  name: string;
+  grams: number;
+  energyKcal: number;
+  moistureGrams: number;
+  proteinGrams: number;
+  fatGrams: number;
+  carbsGrams: number;
+  fiberGrams: number;
+  ashGrams: number;
+  calciumMg: number;
+  phosphorusMg: number;
+  ironMg: number;
+  vitAMcg: number;
+  thiaminB1Mg: number;
+  riboflavinB2Mg: number;
+  niacinB3Mg: number;
+  vitCMg: number;
+}
+
+export interface DetailedDietMealTime {
+  name: 'DESAYUNO' | 'COLACIÓN 1' | 'ALMUERZO' | 'COLACIÓN 2' | 'CENA';
+  items: DetailedDietFoodItem[];
+}
+

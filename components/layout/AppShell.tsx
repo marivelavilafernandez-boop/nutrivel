@@ -18,7 +18,7 @@ import { ProfessionalPreview } from '../profesional/ProfessionalPreview';
 import { ConfiguracionView } from '../configuracion/ConfiguracionView';
 import { LoveLetterView } from '../love/LoveLetterView';
 
-// Nuevas herramientas clínicas de nutrición (Etapa 2)
+// Herramientas clínicas de nutrición
 import { CalculadorasNutricionales } from '../nutricion/CalculadorasNutricionales';
 import { TablaAlimentosView } from '../nutricion/TablaAlimentosView';
 import { ArmadorPlanesView } from '../nutricion/ArmadorPlanesView';
@@ -28,6 +28,11 @@ import { GeneradorApaView } from '../nutricion/GeneradorApaView';
 import { AntropometriaAvanzadaView } from '../nutricion/AntropometriaAvanzadaView';
 import { TamizajeNutricionalView } from '../nutricion/TamizajeNutricionalView';
 import { AnamnesisClinicaView } from '../nutricion/AnamnesisClinicaView';
+
+// Módulos integrados del Excel Nutricional Fabiola SG.B
+import { FichaBioquimicaView } from '../nutricion/FichaBioquimicaView';
+import { FrecuenciaConsumoView } from '../nutricion/FrecuenciaConsumoView';
+import { RequerimientoMultiFormulaView } from '../nutricion/RequerimientoMultiFormulaView';
 
 export const AppShell: React.FC = () => {
   const { activeTab } = useNutriStore();
@@ -46,6 +51,12 @@ export const AppShell: React.FC = () => {
         return <ApuntesView />;
       case 'calculadoras':
         return <CalculadorasNutricionales />;
+      case 'requerimiento':
+        return <RequerimientoMultiFormulaView />;
+      case 'bioquimica':
+        return <FichaBioquimicaView />;
+      case 'frecuencia':
+        return <FrecuenciaConsumoView />;
       case 'tbca':
         return <TablaAlimentosView />;
       case 'minutas':
