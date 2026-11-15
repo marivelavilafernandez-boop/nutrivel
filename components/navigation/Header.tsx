@@ -35,6 +35,12 @@ export const Header: React.FC = () => {
     trabajos: 'Trabajos, Tareas & Entregas',
     calendario: 'Calendario Académico y Turnos',
     apuntes: 'Apuntes Clínicos y Guías',
+    calculadoras: 'Calculadoras Nutricionales (IMC, TMB, GET, Proteínas)',
+    tbca: 'Tabla Boliviana de Composición de Alimentos (TBCA)',
+    minutas: 'Armador de Minutas y Planes de Alimentación',
+    casos: 'Casos Clínicos & Diagnóstico PES',
+    tesis: 'Proyecto de Grado & Titulación UMSA',
+    apa: 'Generador de Citas Bibliográficas (APA 7)',
     profesional: 'Vista Previa • Consultorio Profesional',
     configuracion: 'Configuración y Respaldo'
   };

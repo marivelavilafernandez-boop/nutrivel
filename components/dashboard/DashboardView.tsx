@@ -298,7 +298,7 @@ export const DashboardView: React.FC = () => {
 
           <div className="relative z-10 mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
             <button
-              onClick={() => setActiveTab('apuntes')}
+              onClick={() => setActiveTab('casos')}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs shadow-md shadow-pink-500/30 hover:opacity-95 transition-all cursor-pointer flex items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5" /> REVISAR CASO

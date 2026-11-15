@@ -12,7 +12,12 @@ import {
   Briefcase, 
   Settings, 
   Plus,
-  Sparkles
+  Sparkles,
+  Calculator,
+  Apple,
+  ClipboardList,
+  Stethoscope,
+  BookmarkCheck
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -20,19 +25,28 @@ export const Sidebar: React.FC = () => {
 
   const pendingTasksCount = tasks.filter(t => t.status === 'pendiente' || t.status === 'en_progreso').length;
 
-  const studentNavItems = [
+  const academicItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'materias', label: 'Mis Materias', icon: BookOpen },
-    { id: 'trabajos', label: 'Trabajos y Tareas', icon: CheckSquare, badge: pendingTasksCount },
-    { id: 'calendario', label: 'Calendario', icon: Calendar },
+    { id: 'trabajos', label: 'Tareas y Entregas', icon: CheckSquare, badge: pendingTasksCount },
+    { id: 'calendario', label: 'Calendario & Turnos', icon: Calendar },
     { id: 'apuntes', label: 'Apuntes y Guías', icon: FileText }
+  ];
+
+  const nutritionTools = [
+    { id: 'calculadoras', label: 'Calculadoras Clínicas', icon: Calculator },
+    { id: 'tbca', label: 'Tabla de Alimentos (TBCA)', icon: Apple },
+    { id: 'minutas', label: 'Armador de Minutas', icon: ClipboardList },
+    { id: 'casos', label: 'Casos Clínicos (PES)', icon: Stethoscope },
+    { id: 'tesis', label: 'Proyecto de Grado', icon: GraduationCap },
+    { id: 'apa', label: 'Citas APA 7', icon: BookmarkCheck }
   ];
 
   return (
     <aside className="hidden lg:flex flex-col w-64 bg-[#141526] text-gray-300 border-r border-[#262840] shrink-0 h-screen sticky top-0 shadow-xl z-20">
       
       {/* 1. BRAND HEADER */}
-      <div className="p-5 pb-4 flex items-center justify-between">
+      <div className="p-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-500 via-rose-500 to-emerald-400 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-pink-500/20">
             🌿
@@ -48,30 +62,20 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. PROMINENT ACTION BUTTON (+ CREATE NEW como en la imagen de referencia) */}
-      <div className="px-4 mb-4">
+      {/* 2. PROMINENT ACTION BUTTON (+ NUEVA TAREA / MINUTA) */}
+      <div className="px-4 mb-3">
         <button
-          onClick={() => setActiveTab('trabajos')}
-          className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#d946ef] to-[#ec4899] text-white font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg shadow-pink-500/30 hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
+          onClick={() => setActiveTab('minutas')}
+          className="w-full py-2.5 px-4 rounded-2xl bg-gradient-to-r from-[#d946ef] to-[#ec4899] text-white font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg shadow-pink-500/30 hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
-          <span>+ Nueva Tarea</span>
+          <span>+ Nueva Minuta</span>
         </button>
       </div>
 
-      {/* 3. SWITCHER DE MODO (Estudiante / Próximamente Profesional) */}
-      <div className="px-4 mb-3">
-        <div className="p-2.5 rounded-2xl bg-[#1e2038] border border-[#2e3152]">
-          <div className="flex items-center justify-between mb-1.5 px-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-              Modo Activo
-            </span>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-              appMode === 'student' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-pink-500/20 text-pink-300'
-            }`}>
-              {appMode === 'student' ? '🎓 Estudiante' : '👩‍⚕️ Profesional'}
-            </span>
-          </div>
+      {/* 3. SWITCHER DE MODO (Estudiante / Profesional) */}
+      <div className="px-4 mb-2">
+        <div className="p-2 rounded-2xl bg-[#1e2038] border border-[#2e3152]">
           <div className="grid grid-cols-2 gap-1 bg-[#141526] p-0.5 rounded-xl border border-[#2e3152]/60">
             <button
               onClick={() => setAppMode('student')}
@@ -81,7 +85,7 @@ export const Sidebar: React.FC = () => {
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              Estudiante
+              🎓 Estudiante
             </button>
             <button
               onClick={() => setActiveTab('profesional')}
@@ -98,29 +102,31 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* 4. LISTA DE NAVEGACIÓN */}
-      <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
-        <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
-          Panel Académico
+      <nav className="flex-1 px-3 space-y-1 overflow-y-auto pr-1">
+        
+        {/* Grupo 1: Académico */}
+        <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+          Académico
         </div>
-        {studentNavItems.map(item => {
+        {academicItems.map(item => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
           return (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl font-medium text-xs transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl font-medium text-xs transition-all cursor-pointer ${
                 isActive
                   ? 'bg-[#252847] text-white font-bold border-l-4 border-pink-500 shadow-sm'
                   : 'text-gray-400 hover:bg-[#1c1e36] hover:text-gray-200'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <Icon className={`w-4 h-4 ${isActive ? 'text-pink-400' : 'text-gray-400'}`} />
+              <div className="flex items-center gap-2.5">
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-pink-400' : 'text-gray-400'}`} />
                 <span>{item.label}</span>
               </div>
               {item.badge !== undefined && item.badge > 0 && (
-                <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-pink-500 text-white">
+                <span className="text-[10px] font-extrabold px-1.5 py-0.2 rounded-full bg-pink-500 text-white">
                   {item.badge}
                 </span>
               )}
@@ -128,31 +134,58 @@ export const Sidebar: React.FC = () => {
           );
         })}
 
-        <div className="pt-4 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+        {/* Grupo 2: Herramientas de Nutrición Clínica */}
+        <div className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-pink-400/90 flex items-center justify-between">
+          <span>Herramientas de Nutrición</span>
+          <span className="text-[9px] px-1 py-0.2 rounded-sm bg-pink-500/20 text-pink-300 font-bold">Pro</span>
+        </div>
+        {nutritionTools.map(item => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl font-medium text-xs transition-all cursor-pointer ${
+                isActive
+                  ? 'bg-[#252847] text-white font-bold border-l-4 border-pink-500 shadow-sm'
+                  : 'text-gray-400 hover:bg-[#1c1e36] hover:text-gray-200'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-pink-400' : 'text-pink-300/70'}`} />
+                <span>{item.label}</span>
+              </div>
+            </button>
+          );
+        })}
+
+        {/* Ajustes */}
+        <div className="pt-3 px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
           Ajustes
         </div>
         <button
           onClick={() => setActiveTab('configuracion')}
-          className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium text-xs transition-all cursor-pointer ${
+          className={`w-full flex items-center gap-2.5 px-3.5 py-2 rounded-xl font-medium text-xs transition-all cursor-pointer ${
             activeTab === 'configuracion'
               ? 'bg-[#252847] text-white font-bold border-l-4 border-pink-500'
               : 'text-gray-400 hover:bg-[#1c1e36] hover:text-gray-200'
           }`}
         >
-          <Settings className="w-4 h-4 text-gray-400" />
-          <span>Configuración</span>
+          <Settings className="w-3.5 h-3.5 text-gray-400" />
+          <span>Configuración & Respaldo</span>
         </button>
       </nav>
 
       {/* 5. TARJETA DE PERFIL (Marivel Avila) */}
-      <div className="p-4 border-t border-[#262840] bg-[#101120]">
+      <div className="p-3.5 border-t border-[#262840] bg-[#101120]">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center font-bold text-xs ring-2 ring-pink-500/30">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center font-bold text-xs ring-2 ring-pink-500/30">
             MA
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-bold text-white truncate">Marivel Avila F.</p>
-            <p className="text-[10px] text-pink-300/80 truncate">Futura Lic. en Nutrición</p>
+            <p className="text-[10px] text-pink-300/80 truncate">Estudiante de Nutrición • UMSA</p>
           </div>
         </div>
       </div>

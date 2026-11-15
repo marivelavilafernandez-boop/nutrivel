@@ -15,6 +15,14 @@ import { ApuntesView } from '../apuntes/ApuntesView';
 import { ProfessionalPreview } from '../profesional/ProfessionalPreview';
 import { ConfiguracionView } from '../configuracion/ConfiguracionView';
 
+// Nuevas herramientas clínicas de nutrición (Etapa 2)
+import { CalculadorasNutricionales } from '../nutricion/CalculadorasNutricionales';
+import { TablaAlimentosView } from '../nutricion/TablaAlimentosView';
+import { ArmadorPlanesView } from '../nutricion/ArmadorPlanesView';
+import { CasosClinicosView } from '../nutricion/CasosClinicosView';
+import { TesisGradoView } from '../nutricion/TesisGradoView';
+import { GeneradorApaView } from '../nutricion/GeneradorApaView';
+
 export const AppShell: React.FC = () => {
   const { activeTab } = useNutriStore();
 
@@ -30,6 +38,18 @@ export const AppShell: React.FC = () => {
         return <CalendarioView />;
       case 'apuntes':
         return <ApuntesView />;
+      case 'calculadoras':
+        return <CalculadorasNutricionales />;
+      case 'tbca':
+        return <TablaAlimentosView />;
+      case 'minutas':
+        return <ArmadorPlanesView />;
+      case 'casos':
+        return <CasosClinicosView />;
+      case 'tesis':
+        return <TesisGradoView />;
+      case 'apa':
+        return <GeneradorApaView />;
       case 'profesional':
         return <ProfessionalPreview />;
       case 'configuracion':

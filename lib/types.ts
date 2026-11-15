@@ -114,3 +114,106 @@ export interface AppNotification {
   read: boolean;
   linkTab?: string;
 }
+
+// ----------------- MÓDULOS DE NUTRICIÓN CLÍNICA Y ACADÉMICA (FASE 1 - ETAPA 2) -----------------
+
+export interface FoodItem {
+  id: string;
+  name: string;
+  category: 
+    | 'Cereales Andinos y Granos' 
+    | 'Tubérculos y Raíces' 
+    | 'Leguminosas y Semillas' 
+    | 'Carnes, Aves y Pescados' 
+    | 'Lácteos y Derivados' 
+    | 'Verduras y Hortalizas' 
+    | 'Frutas Locales' 
+    | 'Grasas y Aceites';
+  portionGrams: number; // Porción estándar (100g)
+  energyKcal: number;
+  proteinGrams: number;
+  carbsGrams: number;
+  fatGrams: number;
+  fiberGrams: number;
+  ironMg: number;
+  calciumMg: number;
+  sodiumMg: number;
+  isBolivianNative?: boolean; // ej: quinua, cañahua, tarwi, chuño, tunta
+  notes?: string;
+}
+
+export interface MealFoodItem {
+  id: string;
+  foodId: string;
+  foodName: string;
+  grams: number;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+export interface MealSlot {
+  id: string;
+  name: 'Desayuno' | 'Colación Mañana' | 'Almuerzo' | 'Merienda Tarde' | 'Cena';
+  time: string;
+  items: MealFoodItem[];
+}
+
+export interface ClinicalCase {
+  id: string;
+  patientFakeName: string;
+  age: number;
+  gender: 'Femenino' | 'Masculino';
+  medicalDiagnosis: string;
+  hospitalWard: string; // ej: Sala Nefrología, Medicina Interna
+  weightKg: number;
+  heightCm: number;
+  bmi: number;
+  bmiCategory: string;
+  biochemistry: {
+    glucose?: number;
+    creatinine?: number;
+    urea?: number;
+    albumin?: number;
+    totalCholesterol?: number;
+    triglycerides?: number;
+    potassium?: number;
+    sodium?: number;
+  };
+  pesDiagnosis: {
+    problem: string;
+    etiology: string;
+    signsSymptoms: string;
+  };
+  dietaryPrescription: string;
+  targetKcal: number;
+  targetProteinGrams: number;
+  clinicalNotes: string;
+  status: 'en_analisis' | 'plan_completado' | 'evaluado';
+}
+
+export interface ThesisMilestone {
+  id: string;
+  title: string;
+  stageName: string;
+  dueDate: string;
+  status: 'pendiente' | 'en_progreso' | 'aprobado_tutor' | 'completado';
+  progressPercentage: number;
+  tutorFeedback?: string;
+  notes?: string;
+}
+
+export interface ApaReference {
+  id: string;
+  title: string;
+  authors: string;
+  year: number;
+  sourceType: 'libro' | 'articulo' | 'guia_clinica' | 'tesis';
+  publisherOrJournal: string;
+  doiOrUrl?: string;
+  inTextCitation: string;
+  fullReference: string;
+  subjectId?: string;
+}
+
